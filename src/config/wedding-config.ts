@@ -15,7 +15,7 @@ export const weddingConfig = {
   meta: {
     title: "엄규철 ❤️ 김유진의 결혼식에 초대합니다",
     description: "결혼식 초대장",
-    ogImage: "/images/ha0h-1fsi-bqt3.jpg",
+    ogImage: "/images/",
     noIndex: true,
     _jwk_watermark_id: uniqueIdentifier,
   },
@@ -23,7 +23,7 @@ export const weddingConfig = {
   // 메인 화면
   main: {
     title: "Wedding Invitation",
-    image: "/images/ha0h-1fsi-bqt3.jpg",
+    image: "/images/main.jpg",
     date: "2026년 1월 24일 토요일 12시 10분",
     venue: "빌라드지디 안산 그레이스켈리홀",
   },
@@ -31,7 +31,7 @@ export const weddingConfig = {
   // 소개글
   intro: {
     title: "",
-    text: "서로를 바라보며 걸어온\n소중한 발걸음이\n이제 하나의 길로 이어집니다.\n\n사랑과 믿음으로\n새 가정을 이루는 저희 두 사람의\n작은 시작을 알려드립니다."
+    text: "학교에서 선후배로 만나\n사랑으로 이어진 지 아홉 해.\n\n그 시간 속에서 서로의 세상이 되어\n이제는 하나의 길을 걸어가려 합니다.\n\n저희의 시작을 따뜻한 마음으로 축복해 주신다면\n그 무엇보다도 큰 힘이 될 것입니다."
   },
 
   // 결혼식 일정
@@ -58,10 +58,10 @@ export const weddingConfig = {
     mapZoom: "17", // 지도 줌 레벨
     mapNaverCoordinates: "14141300,4507203,15,0,0,0,dh", // 네이버 지도 길찾기 URL용 좌표 파라미터 (구 형식)
     transportation: {
-      subway: "지하철역 1번 출구에서 도보 5분",
+      subway: "지하철 4호선 고잔역 2번 출구 (도보 10분)",
       bus: "간선\n 101, 102, 103\n지선\n 1234, 5678",
     },
-    parking: "건물 지하 주차장 이용 가능 (2시간 무료)",
+    parking: "건물 주차장 이용 가능 (2시간 무료)",
     // 신랑측 배차 안내
     groomShuttle: {
       location: "신랑측 배차 출발지",
@@ -85,7 +85,7 @@ export const weddingConfig = {
   // 갤러리
   gallery: {
     layout: "grid" as GalleryLayout, // "scroll" 또는 "grid" 선택
-    position: "bottom" as GalleryPosition, // "middle" (현재 위치) 또는 "bottom" (맨 하단) 선택
+    position: "middle" as GalleryPosition, // "middle" (현재 위치) 또는 "bottom" (맨 하단) 선택
     images: [
       "/images/gallery/01.jpg",
       "/images/gallery/02.jpg",
@@ -101,7 +101,7 @@ export const weddingConfig = {
 
   // 초대의 말씀
   invitation: {
-    message: "한 줄기 별빛이 되어 만난 인연\n평생을 함께 걸어가려 합니다.\n\n소중한 분들의 축복 속에\n저희 두 사람이 첫 걸음을 내딛습니다.\n\n귀한 시간 내어 함께해 주신다면\n그 어떤 축복보다 값진 선물이 될 것입니다.",
+    message:  "학교에서 선후배로 만나\n사랑으로 이어진 지 아홉 해.\n\n그 시간 속에서 서로의 세상이 되어\n이제는 하나의 길을 걸어가려 합니다.\n\n저희의 시작을 따뜻한 마음으로 축복해 주신다면\n그 무엇보다도 큰 힘이 될 것입니다.",
     groom: {
       name: "엄규철",
       label: "아들",
@@ -111,7 +111,7 @@ export const weddingConfig = {
     bride: {
       name: "김유진",
       label: "딸",
-      father: "김범",
+      father: "김 범",
       mother: "이향옥",
     },
   },

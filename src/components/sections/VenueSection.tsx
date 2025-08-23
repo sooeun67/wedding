@@ -44,8 +44,8 @@ const VenueSection = ({ bgColor = 'white' }: VenueSectionProps) => {
   
   // 디버깅 정보 출력
   useEffect(() => {
-    const clientId = process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID || '';
-    const debug = `클라이언트 ID: ${clientId.substring(0, 3)}...`;
+    const ncpClientId = process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID || '';
+    const debug = `클라이언트 ID: ${ncpClientId.substring(0, 3)}...`;
     setDebugInfo(debug);
   }, []);
   

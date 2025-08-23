@@ -17,13 +17,13 @@ const MainSection = () => {
         fill
         priority
         sizes="100vw"
-        quality={90}
-        style={{ objectFit: 'cover', objectPosition: 'center 10%' }}
+        quality={100}
+        style={{ objectFit: 'cover', objectPosition: 'center 40%' }}
       />
       <Overlay />
       <MainContent>
         <MainTitle>{weddingConfig.main.title}</MainTitle>
-        <DateText>{weddingConfig.main.date}</DateText>
+        <DateText>{weddingConfig.date.displayDate}</DateText>
         <VenueText>{weddingConfig.main.venue}</VenueText>
         {}
         <HiddenWatermark aria-hidden="true">
