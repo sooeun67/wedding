@@ -13,7 +13,7 @@ interface GalleryConfig {
 export const weddingConfig = {
   // 메타 정보
   meta: {
-    title: "신랑 ❤️ 신부의 결혼식에 초대합니다",
+    title: "엄규철 ❤️ 김유진의 결혼식에 초대합니다",
     description: "결혼식 초대장",
     ogImage: "/images/ha0h-1fsi-bqt3.jpg",
     noIndex: true,
@@ -24,8 +24,8 @@ export const weddingConfig = {
   main: {
     title: "Wedding Invitation",
     image: "/images/ha0h-1fsi-bqt3.jpg",
-    date: "2026년 5월 16일 토요일 12시 30분",
-    venue: "웨딩홀 이름"
+    date: "2026년 1월 24일 토요일 12시 10분",
+    venue: "빌라드지디 안산 그레이스켈리홀",
   },
 
   // 소개글
@@ -37,24 +37,24 @@ export const weddingConfig = {
   // 결혼식 일정
   date: {
     year: 2026,
-    month: 5,
-    day: 16,
+    month: 1,
+    day: 24,
     hour: 12,
-    minute: 30,
-    displayDate: "2026.05.16 SAT PM 12:30",
+    minute: 10,
+    displayDate: "2026.01.24 SAT PM 12:10",
   },
 
   // 장소 정보
   venue: {
-    name: "웨딩홀 이름",
-    address: "서울특별시 강남구 테헤란로 123\n웨딩홀 이름",
-    tel: "02-1234-5678",
-    naverMapId: "웨딩홀 이름", // 네이버 지도 검색용 장소명
+    name: "빌라드지디 안산",
+    address: "경기 안산시 단원구 광덕4로 140\n빌라드지디 안산 7층 그레이스켈리홀",
+    tel: "031-487-8100",
+    naverMapId: "그레이스켈리홀", // 네이버 지도 검색용 장소명
     coordinates: {
-      latitude: 37.5665,
-      longitude: 126.9780,
+      latitude: 37.314924,
+      longitude: 126.8278801,
     },
-    placeId: "123456789", // 네이버 지도 장소 ID
+    placeId: "34291584", // 네이버 지도 장소 ID
     mapZoom: "17", // 지도 줌 레벨
     mapNaverCoordinates: "14141300,4507203,15,0,0,0,dh", // 네이버 지도 길찾기 URL용 좌표 파라미터 (구 형식)
     transportation: {
@@ -87,15 +87,15 @@ export const weddingConfig = {
     layout: "grid" as GalleryLayout, // "scroll" 또는 "grid" 선택
     position: "bottom" as GalleryPosition, // "middle" (현재 위치) 또는 "bottom" (맨 하단) 선택
     images: [
-      "/images/gallery/image1.jpg",
-      "/images/gallery/image2.jpg",
-      "/images/gallery/image3.jpg",
-      "/images/gallery/image4.jpg",
-      "/images/gallery/image5.jpg",
-      "/images/gallery/image6.jpg",
-      "/images/gallery/image7.jpg",
-      "/images/gallery/image8.jpg",
-      "/images/gallery/image9.jpg",
+      "/images/gallery/01.jpg",
+      "/images/gallery/02.jpg",
+      "/images/gallery/03.jpg",
+      "/images/gallery/04.jpg",
+      "/images/gallery/05.jpg",
+      "/images/gallery/06.jpg",
+      "/images/gallery/07.jpg",
+      "/images/gallery/08.jpg",
+      "/images/gallery/09.jpg",
     ],
   } as GalleryConfig,
 
@@ -103,30 +103,30 @@ export const weddingConfig = {
   invitation: {
     message: "한 줄기 별빛이 되어 만난 인연\n평생을 함께 걸어가려 합니다.\n\n소중한 분들의 축복 속에\n저희 두 사람이 첫 걸음을 내딛습니다.\n\n귀한 시간 내어 함께해 주신다면\n그 어떤 축복보다 값진 선물이 될 것입니다.",
     groom: {
-      name: "신랑이름",
+      name: "엄규철",
       label: "아들",
-      father: "신랑아버지",
-      mother: "신랑어머니",
+      father: "엄태관",
+      mother: "손덕수",
     },
     bride: {
-      name: "신부이름",
+      name: "김유진",
       label: "딸",
-      father: "신부아버지",
-      mother: "신부어머니",
+      father: "김범",
+      mother: "이향옥",
     },
   },
 
   // 계좌번호
   account: {
     groom: {
-      bank: "은행명",
-      number: "123-456-789012",
-      holder: "신랑이름",
+      bank: "우리은행",
+      number: "1002-247-991527",
+      holder: "엄규철",
     },
     bride: {
-      bank: "은행명",
-      number: "987-654-321098",
-      holder: "신부이름",
+      bank: "우리은행",
+      number: "1002-247-991527",
+      holder: "김유진",
     },
     groomFather: {
       bank: "은행명",
