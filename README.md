@@ -43,7 +43,7 @@
 
 1. 저장소 클론하기:
    ```
-   git clone https://github.com/your-username/wedding-invitation.git
+   git clone https://github.com/ekc0106/ekckyj-wedding.git
    cd wedding-invitation
    ```
 
