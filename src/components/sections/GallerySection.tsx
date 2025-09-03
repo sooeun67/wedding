@@ -294,9 +294,14 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
                 loading="eager"
                 quality={80}
                 sizes="90vw"
-                style={{ objectFit: 'contain', background: 'transparent' }}
-                draggable={false}
-                onContextMenu={e => e.preventDefault()}
+                // style={{ objectFit: 'contain', background: 'transparent' }}
+                style={{ 
+                  objectFit: 'contain', 
+                  background: 'transparent',
+                  pointerEvents: 'none'   // ✅ 확대/줌/드래그 불가
+                }}
+                draggable={false}          // ✅ 드래그 방지
+                onContextMenu={e => e.preventDefault()} // ✅ 우클릭 방지
                 onLoad={handleExpandedImageLoad}
                 onError={handleExpandedImageError}
               />
