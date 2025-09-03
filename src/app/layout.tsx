@@ -5,6 +5,7 @@ import { weddingConfig } from '../config/wedding-config';
 import Watermark from '../lib/watermark';
 import { GlobalStyle } from '../styles/globalStyles';
 import CacheManager from '../components/CacheManager';
+import AudioPlayer from "../components/AudioPlayer";
 
 const watermarkId = weddingConfig.meta._jwk_watermark_id || 'JWK-NonCommercial';
 const metaDescription = '웨딩 청첩장 - 비상업적 용도';
@@ -96,6 +97,7 @@ export default function RootLayout({
           JWK-Wedding-{watermarkId}-NonCommercial
         </div>
         <Watermark />
+        <AudioPlayer />
         {children}
       </body>
     </html>
