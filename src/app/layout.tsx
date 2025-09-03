@@ -3,6 +3,7 @@ import { weddingConfig } from '../config/wedding-config';
 import Watermark from '../lib/watermark';
 import { GlobalStyle } from '../styles/globalStyles';
 import CacheManager from '../components/CacheManager';
+import MusicPlayer from '../components/common/MusicPlayer'; // ✅ 방금 만든 컴포넌트 import
 
 const watermarkId = weddingConfig.meta._jwk_watermark_id || 'JWK-NonCommercial';
 const metaDescription = '웨딩 청첩장 - 비상업적 용도';
@@ -14,7 +15,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      {}
       <head>
         <link
           rel="preload"
@@ -30,20 +30,21 @@ export default function RootLayout({
           type="font/ttf"
           crossOrigin="anonymous"
         />
-        {}
         <meta name="generator" content={`Wedding-Template-${watermarkId}`} />
         <meta name="description" content={metaDescription} />
       </head>
       <body>
         <GlobalStyle />
         <CacheManager />
-        {}
         <div className="jwk-watermark" aria-hidden="true">
           JWK-Wedding-{watermarkId}-NonCommercial
         </div>
         <Watermark />
         {children}
+
+        {/* ✅ 여기에 추가 */}
+        <MusicPlayer /> 
       </body>
     </html>
   );
-} 
+}
