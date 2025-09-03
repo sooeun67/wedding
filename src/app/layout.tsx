@@ -69,29 +69,7 @@ export default function RootLayout({
       <body>
         <GlobalStyle />
         <CacheManager />
-
-        {/* 🎶 배경 음악 */}
-        <audio id="bg-music" src="/music/wedding.mp3" autoPlay loop muted />
-
-        {/* 🔊 음소거/해제 버튼 */}
-        <button
-          onClick={toggleMute}
-          style={{
-            position: 'fixed',
-            bottom: '1rem',
-            right: '1rem',
-            zIndex: 1000,
-            padding: '0.6rem 1rem',
-            borderRadius: '9999px',
-            border: 'none',
-            background: 'rgba(0,0,0,0.6)',
-            color: 'white',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-          }}
-        >
-          {isMuted ? '🔇 음악 켜기' : '🔊 음악 끄기'}
-        </button>
+        <AudioPlayer />
 
         <div className="jwk-watermark" aria-hidden="true">
           JWK-Wedding-{watermarkId}-NonCommercial
