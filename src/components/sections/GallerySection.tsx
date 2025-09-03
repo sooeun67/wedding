@@ -150,7 +150,16 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
       document.removeEventListener('wheel', handleWheel);
     };
   }, [expandedImage, expandedImageIndex, images]);
-
+  // 핀치줌 방지 처리 (확대 모드일 때만)
+  useEffect(() => {
+    if (expandedImage) {
+      // 확대 모드일 때 핀치줌 차단
+      document.body.style.touchAction = "none";
+    } else {
+      // 닫힐 때 원래대로 복구
+      document.body.style.touchAction = "auto";
+    }
+  }, [expandedImage]);
   // 썸네일 스크롤 버튼
   const scrollLeft = () => scrollContainerRef.current?.scrollBy({ left: -266, behavior: 'smooth' });
   const scrollRight = () => scrollContainerRef.current?.scrollBy({ left: 266, behavior: 'smooth' });
