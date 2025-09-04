@@ -29,7 +29,7 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
         </PhotoWrapper>
 
         <HeartContainer>
-          💖
+          ♥
         </HeartContainer>
 
         <PhotoWrapper>
@@ -61,9 +61,9 @@ const CouplePhotosSectionContainer = styled.section<{ $bgColor: 'white' | 'beige
 const PhotosContainer = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   gap: 2rem;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   
   @media (max-width: 480px) {
@@ -84,8 +84,8 @@ const PhotoWrapper = styled.div`
 
 const CircularImageContainer = styled.div`
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   overflow: hidden;
   border: 4px solid #f0f0f0;
@@ -98,14 +98,14 @@ const CircularImageContainer = styled.div`
   }
   
   @media (max-width: 480px) {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-width: 3px;
   }
   
   @media (max-width: 400px) {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-width: 2px;
   }
 `;
@@ -120,38 +120,23 @@ const CircularImage = styled(Image)`
 
 const HeartContainer = styled.div`
   font-size: 2.5rem;
-  animation: heartbeat 2s ease-in-out infinite;
-  
-  @keyframes heartbeat {
-    0% {
-      transform: scale(1);
-    }
-    14% {
-      transform: scale(1.1);
-    }
-    28% {
-      transform: scale(1);
-    }
-    42% {
-      transform: scale(1.1);
-    }
-    70% {
-      transform: scale(1);
-    }
-  }
+  color: #E74C3C;
+  margin-bottom: 2rem;
   
   @media (max-width: 480px) {
     font-size: 2rem;
+    margin-bottom: 1.5rem;
   }
   
   @media (max-width: 400px) {
     font-size: 1.5rem;
+    margin-bottom: 1rem;
   }
 `;
 
 const NameContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 0.25rem;
 `;
