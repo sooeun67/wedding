@@ -2,12 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { 
+  addGuestbookEntry, 
+  subscribeToGuestbook, 
+  migrateLocalStorageToFirebase,
+  checkFirebaseConnection 
+} from '../../services/guestbook';
 
 interface GuestbookEntry {
-  id: string;
+  id?: string;
   name: string;
   message: string;
   timestamp: number;
+  createdAt?: any;
 }
 
 interface GuestbookSectionProps {
@@ -19,23 +26,63 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFirebaseConnected, setIsFirebaseConnected] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 로컬스토리지에서 방명록 데이터 로드
+  // Firebase 연결 및 실시간 방명록 구독
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedEntries = localStorage.getItem('wedding-guestbook');
-      if (savedEntries) {
-        try {
-          const parsedEntries = JSON.parse(savedEntries);
-          setEntries(parsedEntries.sort((a: GuestbookEntry, b: GuestbookEntry) => b.timestamp - a.timestamp));
-        } catch (error) {
-          console.error('방명록 데이터 로드 오류:', error);
+    let unsubscribe: (() => void) | null = null;
+
+    const initializeFirebase = async () => {
+      try {
+        // Firebase 연결 확인
+        const connected = await checkFirebaseConnection();
+        setIsFirebaseConnected(connected);
+
+        if (connected) {
+          // 기존 로컬스토리지 데이터를 Firebase로 마이그레이션
+          await migrateLocalStorageToFirebase();
+
+          // 실시간 방명록 구독
+          unsubscribe = subscribeToGuestbook((newEntries) => {
+            setEntries(newEntries);
+            setIsLoading(false);
+          });
+        } else {
+          // Firebase 연결 실패 시 로컬스토리지 사용
+          loadFromLocalStorage();
+        }
+      } catch (error) {
+        console.error('Firebase 초기화 실패:', error);
+        loadFromLocalStorage();
+      }
+    };
+
+    const loadFromLocalStorage = () => {
+      if (typeof window !== 'undefined') {
+        const savedEntries = localStorage.getItem('wedding-guestbook');
+        if (savedEntries) {
+          try {
+            const parsedEntries = JSON.parse(savedEntries);
+            setEntries(parsedEntries.sort((a: GuestbookEntry, b: GuestbookEntry) => b.timestamp - a.timestamp));
+          } catch (error) {
+            console.error('방명록 데이터 로드 오류:', error);
+          }
         }
       }
-    }
+      setIsLoading(false);
+    };
+
+    initializeFirebase();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
-  // 로컬스토리지에 방명록 데이터 저장
+  // 로컬스토리지에 방명록 데이터 저장 (Firebase 실패 시 백업용)
   const saveToLocalStorage = (newEntries: GuestbookEntry[]) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('wedding-guestbook', JSON.stringify(newEntries));
@@ -58,24 +105,43 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
 
     setIsSubmitting(true);
 
-    const newEntry: GuestbookEntry = {
-      id: Date.now().toString(),
-      name: name.trim(),
-      message: message.trim(),
-      timestamp: Date.now()
-    };
+    try {
+      if (isFirebaseConnected) {
+        // Firebase에 추가
+        const success = await addGuestbookEntry(name.trim(), message.trim());
+        
+        if (success) {
+          // 폼 초기화
+          setName('');
+          setMessage('');
+          alert('방명록이 등록되었습니다! 💕');
+        } else {
+          throw new Error('Firebase 저장 실패');
+        }
+      } else {
+        // Firebase 연결 실패 시 로컬스토리지 사용
+        const newEntry: GuestbookEntry = {
+          id: Date.now().toString(),
+          name: name.trim(),
+          message: message.trim(),
+          timestamp: Date.now()
+        };
 
-    const updatedEntries = [newEntry, ...entries];
-    setEntries(updatedEntries);
-    saveToLocalStorage(updatedEntries);
+        const updatedEntries = [newEntry, ...entries];
+        setEntries(updatedEntries);
+        saveToLocalStorage(updatedEntries);
 
-    // 폼 초기화
-    setName('');
-    setMessage('');
-    setIsSubmitting(false);
-
-    // 성공 메시지
-    alert('방명록이 등록되었습니다! 💕');
+        // 폼 초기화
+        setName('');
+        setMessage('');
+        alert('방명록이 등록되었습니다! 💕\n(로컬 저장됨)');
+      }
+    } catch (error) {
+      console.error('방명록 등록 실패:', error);
+      alert('방명록 등록에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // 날짜 포맷팅
@@ -97,6 +163,11 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
         따뜻한 마음이 담긴 축하의 글을 남겨주시면<br />
         소중한 추억으로 간직하겠습니다. 💝
       </SectionSubtitle>
+      
+      {/* 연결 상태 표시 */}
+      <ConnectionStatus $isConnected={isFirebaseConnected}>
+        {isFirebaseConnected ? '🌐 실시간 동기화 중' : '📱 로컬 저장'}
+      </ConnectionStatus>
 
       <FormContainer>
         <GuestbookForm onSubmit={handleSubmit}>
@@ -136,7 +207,11 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
       <EntriesContainer>
         <EntriesTitle>방명록 ({entries.length})</EntriesTitle>
         
-        {entries.length === 0 ? (
+        {isLoading ? (
+          <LoadingMessage>
+            방명록을 불러오는 중... ⏳
+          </LoadingMessage>
+        ) : entries.length === 0 ? (
           <EmptyMessage>
             아직 등록된 메시지가 없습니다.<br />
             첫 번째 축하 메시지를 남겨주세요! 🎉
@@ -176,7 +251,31 @@ const SectionSubtitle = styled.p`
   text-align: center;
   font-size: 1rem;
   color: #666;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
+`;
+
+const ConnectionStatus = styled.div<{ $isConnected: boolean }>`
+  text-align: center;
+  font-size: 0.8rem;
+  color: ${props => props.$isConnected ? '#28a745' : '#ffc107'};
+  margin-bottom: 2rem;
+  padding: 0.5rem 1rem;
+  background: ${props => props.$isConnected ? '#d4edda' : '#fff3cd'};
+  border-radius: 20px;
+  display: inline-block;
+  margin-left: 50%;
+  transform: translateX(-50%);
+`;
+
+const LoadingMessage = styled.div`
+  text-align: center;
+  color: #999;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 3rem 1rem;
+  background: white;
+  border-radius: 12px;
+  border: 2px dashed #e1e5e9;
 `;
 
 const FormContainer = styled.div`
