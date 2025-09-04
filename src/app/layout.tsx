@@ -62,10 +62,7 @@ export default function RootLayout({
         <meta property="og:title" content={weddingConfig.meta.title} />
         <meta property="og:description" content={weddingConfig.meta.description} />
         
-        {/* 📌 이미지 URL 다중 설정 (카카오톡 호환성) */}
-        <meta property="og:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
-        <meta property="og:image:url" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
-        <meta property="og:image:secure_url" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
+        {/* 📌 이미지 URL 다중 설정 (카카오톡 호환성) - 타임스탬프로 캐시 방지 */}
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
@@ -96,6 +93,17 @@ export default function RootLayout({
         {/* 📌 추가 Open Graph 메타 태그 */}
         <meta property="og:updated_time" content={new Date().toISOString()} />
         <meta property="og:see_also" content="https://ekckyj-wedding.vercel.app" />
+        
+        {/* 📌 카카오톡 모바일 호환성을 위한 추가 메타 태그 */}
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        
+        {/* 📌 이미지 캐시 방지를 위한 타임스탬프 */}
+        <meta property="og:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}?v=${Date.now()}`} />
+        <meta property="og:image:url" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}?v=${Date.now()}`} />
+        <meta property="og:image:secure_url" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}?v=${Date.now()}`} />
         
         {/* 📌 추가 메타 태그 */}
         <meta name="author" content="엄규철 & 김유진" />
