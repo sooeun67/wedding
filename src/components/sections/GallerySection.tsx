@@ -311,9 +311,9 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
                   src={image}
                   alt={`웨딩 갤러리 이미지 ${index + 1}`}
                   fill
-                  priority={index < 2}
-                  loading={index < 3 ? 'eager' : 'lazy'}
-                  quality={75}
+                  priority={index < 5}
+                  loading="eager"
+                  quality={80}
                   sizes="(max-width:768px) calc(33.333vw - 0.5rem), 260px"
                   placeholder="empty"
                   style={{ objectFit: 'cover' }}
@@ -338,9 +338,9 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
                     src={image}
                     alt={`웨딩 갤러리 이미지 ${index + 1}`}
                     fill
-                    priority={index < 2}
-                    loading={index < 3 ? 'eager' : 'lazy'}
-                    quality={75}
+                    priority={index < 5}
+                    loading="eager"
+                    quality={80}
                     sizes="(max-width:768px) 250px, 300px"
                     placeholder="empty"
                     style={{ objectFit: 'cover' }}
@@ -383,8 +383,10 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
                 alt="확대된 웨딩 갤러리 이미지"
                 fill
                 priority
-                quality={90}
-                sizes="90vw"
+                quality={95}
+                sizes="100vw"
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                 // style={{ objectFit: 'contain', background: 'transparent' }}
                 style={{ 
                   objectFit: 'contain', 
