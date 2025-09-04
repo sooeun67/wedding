@@ -20,13 +20,24 @@ const VideoSection = ({ bgColor = 'white' }: VideoSectionProps) => {
     setIsVideoLoaded(true);
   };
 
+  // Vimeo iframe이 로드되지 않는 경우를 대비한 타이머
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVideoLoaded(true);
+    }, 3000); // 3초 후 강제로 로딩 완료 처리
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <VideoSectionContainer $bgColor={bgColor}>
       <VideoContent>
         <VideoTitle>{weddingConfig.video.title}</VideoTitle>
-        <VideoDescription>
-          {weddingConfig.video.description}
-        </VideoDescription>
+        {weddingConfig.video.description && (
+          <VideoDescription>
+            {weddingConfig.video.description}
+          </VideoDescription>
+        )}
         
         <VideoWrapper>
           {!isVideoLoaded && (
@@ -38,13 +49,15 @@ const VideoSection = ({ bgColor = 'white' }: VideoSectionProps) => {
           
           <VideoContainer>
             <VideoIframe
-              src={weddingConfig.video.url}
+              src={`${weddingConfig.video.url}?autoplay=0&loop=0&muted=0&controls=1&responsive=1`}
               title="웨딩 영상"
               frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
               onLoad={handleVideoLoad}
+              onError={() => setIsVideoLoaded(true)}
               style={{ opacity: isVideoLoaded ? 1 : 0 }}
+              loading="lazy"
             />
           </VideoContainer>
         </VideoWrapper>
