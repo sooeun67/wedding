@@ -55,6 +55,26 @@ export default function RootLayout({
         ))}
         <meta name="generator" content={`Wedding-Template-${watermarkId}`} />
         <meta name="description" content={metaDescription} />
+        
+        {/* 📌 Open Graph 메타 태그 (카카오톡, 슬랙 썸네일) */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={weddingConfig.meta.title} />
+        <meta property="og:description" content={weddingConfig.meta.description} />
+        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'}${weddingConfig.main.image}`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content={process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'} />
+        <meta property="og:site_name" content="웨딩 청첩장" />
+        
+        {/* 📌 Twitter Card 메타 태그 */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={weddingConfig.meta.title} />
+        <meta name="twitter:description" content={weddingConfig.meta.description} />
+        <meta name="twitter:image" content={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'}${weddingConfig.main.image}`} />
+        
+        {/* 📌 추가 메타 태그 */}
+        <meta name="author" content="엄규철 & 김유진" />
+        <meta name="keywords" content="웨딩, 결혼식, 청첩장, 엄규철, 김유진, 2026" />
 
         {/* 📌 핀치줌 방지 (갤러리 확대 모드 제외용은 따로 제어 가능) */}
         <meta
