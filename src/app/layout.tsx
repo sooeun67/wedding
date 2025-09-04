@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { weddingConfig } from '../config/wedding-config';
 import Watermark from '../lib/watermark';
 import { GlobalStyle } from '../styles/globalStyles';
@@ -15,29 +15,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [isMuted, setIsMuted] = useState(true);
-
-  useEffect(() => {
-    const audio = document.getElementById('bg-music') as HTMLAudioElement | null;
-    if (audio) {
-      // 첫 사용자 클릭 시 음소거 해제 및 재생
-      const enableSound = () => {
-        audio.muted = false;
-        audio.play().catch((err) => console.warn('자동 재생 실패:', err));
-        setIsMuted(false);
-        document.removeEventListener('click', enableSound);
-      };
-      document.addEventListener('click', enableSound, { once: true });
-    }
-  }, []);
-
-  const toggleMute = () => {
-    const audio = document.getElementById('bg-music') as HTMLAudioElement | null;
-    if (audio) {
-      audio.muted = !audio.muted;
-      setIsMuted(audio.muted);
-    }
-  };
 
   return (
     <html lang="ko">
@@ -57,6 +34,25 @@ export default function RootLayout({
           type="font/ttf"
           crossOrigin="anonymous"
         />
+        
+        {/* 📌 중요 이미지 프리로드 (메인 이미지) */}
+        <link
+          rel="preload"
+          href={weddingConfig.main.image}
+          as="image"
+          type="image/jpeg"
+        />
+        
+        {/* 📌 갤러리 첫 번째 이미지들 프리로드 */}
+        {weddingConfig.gallery.images.slice(0, 3).map((image, index) => (
+          <link
+            key={index}
+            rel="preload"
+            href={image}
+            as="image"
+            type="image/jpeg"
+          />
+        ))}
         <meta name="generator" content={`Wedding-Template-${watermarkId}`} />
         <meta name="description" content={metaDescription} />
 
@@ -65,6 +61,14 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
         />
+        
+        {/* 📌 DNS 프리페치로 연결 속도 개선 */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+        
+        {/* 📌 연결 프리페치 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
         <GlobalStyle />

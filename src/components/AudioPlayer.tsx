@@ -4,21 +4,34 @@ import { useEffect, useRef, useState } from "react";
 
 export default function AudioPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [muted, setMuted] = useState(true); // 시작은 음소거
+  const [muted, setMuted] = useState(false); // 시작은 음소거 해제
 
   useEffect(() => {
     const audio = audioRef.current;
     if (audio) {
-      // 첫 사용자 클릭 시 음소거 해제 & 재생 허용
-      const enableSound = () => {
+      // 페이지 로드 시 자동재생 시도
+      const playAudio = () => {
         audio.muted = false;
         audio.play().catch(err => {
           console.warn("자동재생 실패:", err);
+          // 자동재생이 실패하면 사용자 상호작용 후 재생
+          const enableSound = () => {
+            audio.muted = false;
+            audio.play().catch(err => {
+              console.warn("재생 실패:", err);
+            });
+            setMuted(false);
+            document.removeEventListener("click", enableSound);
+            document.removeEventListener("touchstart", enableSound);
+          };
+          document.addEventListener("click", enableSound, { once: true });
+          document.addEventListener("touchstart", enableSound, { once: true });
         });
         setMuted(false);
-        document.removeEventListener("click", enableSound);
       };
-      document.addEventListener("click", enableSound, { once: true });
+      
+      // 즉시 재생 시도
+      playAudio();
     }
   }, []);
 
@@ -31,7 +44,7 @@ export default function AudioPlayer() {
 
   return (
     <div style={{ position: "fixed", top: "1rem", left: "1rem", zIndex: 2000 }}>
-      <audio ref={audioRef} src="/music/wedding.mp3" autoPlay loop muted />
+      <audio ref={audioRef} src="/music/wedding.mp3" autoPlay loop />
       <button
         onClick={toggleMute}
         style={{

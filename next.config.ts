@@ -12,6 +12,18 @@ const nextConfig = {
     minimumCacheTTL: 31536000, // 1년 캐시
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // 와이파이 환경에서의 로딩 최적화
+    loader: 'default',
+    unoptimized: false,
+    // 이미지 품질 최적화
+    quality: 85,
+    // 더 빠른 로딩을 위한 설정
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   
   // 성능 최적화 설정
@@ -36,7 +48,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate',
+            value: 'public, max-age=300, s-maxage=300, stale-while-revalidate=86400',
           },
         ],
       },
@@ -52,17 +64,21 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate',
+            value: 'public, max-age=300, s-maxage=300, stale-while-revalidate=86400',
           },
         ],
       },
-      // 정적 에셋들 (이미지, 폰트 등)은 장기간 캐시
+      // 정적 에셋들 (이미지, 폰트 등)은 장기간 캐시 + 압축
       {
         source: '/images/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=31536000, immutable, stale-while-revalidate=86400',
+          },
+          {
+            key: 'Vary',
+            value: 'Accept-Encoding',
           },
         ],
       },
@@ -71,7 +87,11 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=31536000, immutable, stale-while-revalidate=86400',
+          },
+          {
+            key: 'Vary',
+            value: 'Accept-Encoding',
           },
         ],
       },
@@ -81,7 +101,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=31536000, immutable, stale-while-revalidate=86400',
           },
         ],
       },
