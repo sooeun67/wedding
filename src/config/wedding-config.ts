@@ -15,7 +15,7 @@ export const weddingConfig = {
   meta: {
     title: "엄규철 ❤️ 김유진의 결혼식에 초대합니다",
     description: "결혼식 초대장",
-    ogImage: "/api/og",
+    ogImage: "/images/thumbnail.jpg",
     noIndex: true,
     _jwk_watermark_id: uniqueIdentifier,
   },
@@ -55,7 +55,7 @@ export const weddingConfig = {
       longitude: 126.8278801,
     },
     placeId: "34291584", // 네이버 지도 장소 ID
-    mapZoom: "16", // 지도 줌 레벨 (한 칸 축소)
+    mapZoom: "10", // 지도 줌 레벨 (한 칸 축소)
     mapNaverCoordinates: "14141300,4507203,15,0,0,0,dh", // 네이버 지도 길찾기 URL용 좌표 파라미터 (구 형식)
     transportation: {
       subway: "지하철 4호선 고잔역 2번 출구 (도보 10분)",
