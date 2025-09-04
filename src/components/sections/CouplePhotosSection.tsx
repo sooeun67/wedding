@@ -121,20 +121,20 @@ const CircularImage = styled(Image)`
 const HeartContainer = styled.div`
   font-size: 2.5rem;
   color: #FF69B4;
-  margin-top: 45px;
+  margin-top: -20px;
   display: flex;
   align-items: center;
   height: 180px;
   
   @media (max-width: 480px) {
     font-size: 2rem;
-    margin-top: 75px;
+    margin-top: -10px;
     height: 150px;
   }
   
   @media (max-width: 400px) {
     font-size: 1.5rem;
-    margin-top: 60px;
+    margin-top: -5px;
     height: 120px;
   }
 `;

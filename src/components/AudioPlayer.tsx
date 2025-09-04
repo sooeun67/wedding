@@ -30,7 +30,7 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div style={{ position: "fixed", top: "1rem", right: "1rem", zIndex: 2000 }}>
+    <div style={{ position: "fixed", top: "1rem", left: "1rem", zIndex: 2000 }}>
       <audio ref={audioRef} src="/music/wedding.mp3" autoPlay loop muted />
       <button
         onClick={toggleMute}
@@ -39,10 +39,10 @@ export default function AudioPlayer() {
           color: "white",
           border: "none",
           borderRadius: "50%",
-          width: "36px",
-          height: "36px",
+          width: "28px",
+          height: "28px",
           cursor: "pointer",
-          fontSize: "16px",
+          fontSize: "12px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
