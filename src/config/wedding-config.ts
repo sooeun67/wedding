@@ -152,10 +152,10 @@ export const weddingConfig = {
 
   // 동영상 설정
   video: {
-    enabled: false, // 동영상 섹션 표시 여부
-    url: "", // Vimeo, YouTube 등의 임베드 URL
-    title: "우리의 이야기",
-    description: "함께한 시간들을 담은 영상입니다",
+    enabled: true, // 동영상 섹션 표시 여부
+    url: "https://vimeo.com/1115881517?fl=pl&fe=sh", // Vimeo, YouTube 등의 임베드 URL
+    title: "💕 2017.06.22 ~ ",
+    description: "그리고 2026.01.24 ~ 새로운 사랑이 찾아온거야~💕",
   },
 
   // RSVP 설정
