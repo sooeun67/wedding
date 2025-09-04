@@ -3,13 +3,14 @@
 import { weddingConfig } from "../src/config/wedding-config";
 import StyledComponentsRegistry from "../src/lib/registry";
 import { GlobalStyle } from "../src/styles/globalStyles";
+import AudioPlayer from "../src/components/AudioPlayer";
 import "./globals.css";
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="ko">
       <head>
@@ -27,7 +28,8 @@ export default function RootLayout({
       <body>
         <StyledComponentsRegistry>
           <GlobalStyle />
-        {children}
+          <AudioPlayer />
+          {children}
         </StyledComponentsRegistry>
       </body>
     </html>

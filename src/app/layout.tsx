@@ -75,7 +75,6 @@ export default function RootLayout({
           JWK-Wedding-{watermarkId}-NonCommercial
         </div>
         <Watermark />
-        <AudioPlayer />
         {children}
       </body>
     </html>
