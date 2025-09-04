@@ -61,21 +61,30 @@ export default function RootLayout({
         <meta property="og:type" content="website" />
         <meta property="og:title" content={weddingConfig.meta.title} />
         <meta property="og:description" content={weddingConfig.meta.description} />
-        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'}${weddingConfig.main.image}`} />
+        <meta property="og:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.main.image}`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:url" content={process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'} />
+        <meta property="og:url" content="https://ekckyj-wedding.vercel.app" />
         <meta property="og:site_name" content="웨딩 청첩장" />
         
         {/* 📌 Twitter Card 메타 태그 */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={weddingConfig.meta.title} />
         <meta name="twitter:description" content={weddingConfig.meta.description} />
-        <meta name="twitter:image" content={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'}${weddingConfig.main.image}`} />
+        <meta name="twitter:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.main.image}`} />
         
         {/* 📌 추가 메타 태그 */}
         <meta name="author" content="엄규철 & 김유진" />
         <meta name="keywords" content="웨딩, 결혼식, 청첩장, 엄규철, 김유진, 2026" />
+        
+        {/* 📌 Open Graph 디버깅용 추가 메타 태그 */}
+        <meta property="og:locale" content="ko_KR" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:alt" content="엄규철과 김유진의 웨딩 청첩장" />
+        
+        {/* 📌 추가 보안 메타 태그 */}
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow" />
 
         {/* 📌 핀치줌 방지 (갤러리 확대 모드 제외용은 따로 제어 가능) */}
         <meta
