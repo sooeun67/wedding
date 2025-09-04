@@ -15,7 +15,7 @@ export const weddingConfig = {
   meta: {
     title: "엄규철 ❤️ 김유진의 결혼식에 초대합니다",
     description: "결혼식 초대장",
-    ogImage: "/images/",
+    ogImage: "/api/og",
     noIndex: true,
     _jwk_watermark_id: uniqueIdentifier,
   },

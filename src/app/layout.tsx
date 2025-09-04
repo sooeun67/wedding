@@ -63,9 +63,9 @@ export default function RootLayout({
         <meta property="og:description" content={weddingConfig.meta.description} />
         
         {/* 📌 이미지 URL 다중 설정 (카카오톡 호환성) */}
-        <meta property="og:image" content="https://ekckyj-wedding.vercel.app/api/og" />
-        <meta property="og:image:url" content="https://ekckyj-wedding.vercel.app/api/og" />
-        <meta property="og:image:secure_url" content="https://ekckyj-wedding.vercel.app/api/og" />
+        <meta property="og:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
+        <meta property="og:image:url" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
+        <meta property="og:image:secure_url" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
@@ -79,13 +79,23 @@ export default function RootLayout({
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={weddingConfig.meta.title} />
         <meta name="twitter:description" content={weddingConfig.meta.description} />
-        <meta name="twitter:image" content="https://ekckyj-wedding.vercel.app/api/og" />
+        <meta name="twitter:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
         <meta name="twitter:image:alt" content="엄규철과 김유진의 웨딩 청첩장" />
         
         {/* 📌 카카오톡 전용 메타 태그 */}
         <meta name="kakao:title" content={weddingConfig.meta.title} />
         <meta name="kakao:description" content={weddingConfig.meta.description} />
-        <meta name="kakao:image" content="https://ekckyj-wedding.vercel.app/api/og" />
+        <meta name="kakao:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
+        
+        {/* 📌 추가 호환성 메타 태그 */}
+        <meta name="application-name" content="웨딩 청첩장" />
+        <meta name="apple-mobile-web-app-title" content="웨딩 청첩장" />
+        <meta name="msapplication-TileImage" content={`https://ekckyj-wedding.vercel.app${weddingConfig.meta.ogImage}`} />
+        <meta name="msapplication-TileColor" content="#f8f6f0" />
+        
+        {/* 📌 추가 Open Graph 메타 태그 */}
+        <meta property="og:updated_time" content={new Date().toISOString()} />
+        <meta property="og:see_also" content="https://ekckyj-wedding.vercel.app" />
         
         {/* 📌 추가 메타 태그 */}
         <meta name="author" content="엄규철 & 김유진" />

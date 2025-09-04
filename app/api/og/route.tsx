@@ -19,6 +19,7 @@ export async function GET() {
             backgroundImage: 'url(https://ekckyj-wedding.vercel.app/images/main.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
             position: 'relative',
           }}
         >
