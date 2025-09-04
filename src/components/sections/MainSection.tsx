@@ -19,6 +19,9 @@ const MainSection = () => {
         sizes="100vw"
         quality={100}
         style={{ objectFit: 'cover', objectPosition: 'center 40%' }}
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
+        onDragStart={(e) => e.preventDefault()}
       />
       <Overlay />
       <MainContent>

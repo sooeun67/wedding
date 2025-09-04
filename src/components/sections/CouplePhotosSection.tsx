@@ -20,6 +20,9 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
               fill
               sizes="180px"
               style={{ objectFit: 'cover' }}
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
             />
           </CircularImageContainer>
           <NameContainer>
@@ -40,6 +43,9 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
               fill
               sizes="180px"
               style={{ objectFit: 'cover' }}
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
             />
           </CircularImageContainer>
           <NameContainer>

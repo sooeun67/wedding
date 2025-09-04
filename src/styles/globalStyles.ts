@@ -119,4 +119,46 @@ export const GlobalStyle = createGlobalStyle`
     --text-light: #999999;
     --jwk-id: "${watermarkId}";
   }
+
+  /* 이미지 보호 스타일 */
+  img {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -webkit-user-drag: none !important;
+    -khtml-user-drag: none !important;
+    -moz-user-drag: none !important;
+    -o-user-drag: none !important;
+    user-drag: none !important;
+    pointer-events: auto !important;
+  }
+
+  /* 이미지 선택 방지 */
+  img::selection {
+    background: transparent !important;
+  }
+
+  img::-moz-selection {
+    background: transparent !important;
+  }
+
+  /* 드래그 방지 */
+  * {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
+
+  /* 텍스트 선택 방지 (이미지 영역) */
+  .wedding-container img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 `; 
