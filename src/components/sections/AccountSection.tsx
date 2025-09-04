@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { weddingConfig } from '../../config/wedding-config';
 import { AccountInfo } from '../../types/wedding';
+import { openKakaoPay } from '../../utils/kakaopay';
 
 type AccountPerson = 'groom' | 'bride' | 'groomFather' | 'groomMother' | 'brideFather' | 'brideMother';
 type AccountSide = 'groom' | 'bride';
@@ -131,14 +132,24 @@ const AccountSection = ({ bgColor = 'white' }: AccountSectionProps) => {
           <AccountBank>{bankText}</AccountBank>
           <AccountNumber>{numberAndHolder}</AccountNumber>
         </AccountRowInfo>
-        <CopyButton
-          onClick={(e) => {
-            e.stopPropagation(); // 클릭 이벤트가 상위로 전파되지 않도록 방지
-            copyToClipboard(copyText, person);
-          }}
-        >
-          {copyStatus[person] ? '복사 완료' : '복사'}
-        </CopyButton>
+        <ButtonGroup>
+          <CopyButton
+            onClick={(e) => {
+              e.stopPropagation(); // 클릭 이벤트가 상위로 전파되지 않도록 방지
+              copyToClipboard(copyText, person);
+            }}
+          >
+            {copyStatus[person] ? '복사 완료' : '복사'}
+          </CopyButton>
+          <KakaoPayButton
+            onClick={(e) => {
+              e.stopPropagation();
+              openKakaoPay(accountInfo);
+            }}
+          >
+            💰
+          </KakaoPayButton>
+        </ButtonGroup>
       </AccountRow>
     );
   };
@@ -354,6 +365,12 @@ const AccountNumber = styled.div`
   }
 `;
 
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+`;
+
 const CopyButton = styled.button`
   background-color: transparent;
   border: 1px solid var(--secondary-color);
@@ -364,7 +381,6 @@ const CopyButton = styled.button`
   font-size: 0.85rem;
   white-space: nowrap;
   transition: all 0.2s ease;
-  margin-left: 0.5rem;
   position: relative;
   overflow: hidden;
   
@@ -408,6 +424,50 @@ const CopyButton = styled.button`
       opacity: 0;
       transform: scale(40, 40);
     }
+  }
+`;
+
+const KakaoPayButton = styled.button`
+  background: linear-gradient(135deg, #FEE500, #FFD700);
+  border: none;
+  color: #3C1E1E;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(254, 229, 0, 0.3);
+  
+  &:hover {
+    background: linear-gradient(135deg, #FFD700, #FEE500);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(254, 229, 0, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(254, 229, 0, 0.3);
+  }
+  
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+  }
+  
+  &:active:after {
+    animation: ripple 0.6s ease-out;
   }
 `;
 

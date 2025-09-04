@@ -92,36 +92,41 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
     return () => { cancelled = true; };
   }, []);
 
-  // 이미지 목록이 로드된 후 우선순위별로 프리로딩
+  // 이미지 목록이 로드된 후 즉시 모든 이미지 프리로딩
   useEffect(() => {
     if (!images.length) return;
     
-    const preloadInBatches = async () => {
-      // 첫 3개 이미지를 우선적으로 프리로딩
-      const priorityImages = images.slice(0, 3);
-      const promises = priorityImages.map(img => preloadImage(img).catch(() => {}));
-      await Promise.allSettled(promises);
+    const aggressivePreload = async () => {
+      // 모든 이미지를 동시에 프리로딩 (속도 우선)
+      const allPromises = images.map((img, index) => {
+        // 첫 5개는 즉시, 나머지는 약간의 딜레이
+        const delay = index < 5 ? 0 : index * 50;
+        return new Promise(resolve => {
+          setTimeout(() => {
+            preloadImage(img).then(resolve).catch(resolve);
+          }, delay);
+        });
+      });
       
-      // 나머지 이미지들을 순차적으로 프리로딩 (네트워크 부하 방지)
-      const remainingImages = images.slice(3);
-      for (const img of remainingImages) {
-        try {
-          await preloadImage(img);
-          // 각 이미지 사이에 작은 딜레이 (브라우저 부하 방지)
-          await new Promise(resolve => setTimeout(resolve, 100));
-        } catch {
-          // 에러 무시하고 계속 진행
-        }
-      }
+      await Promise.allSettled(allPromises);
+      console.log('갤러리 이미지 프리로딩 완료:', preloadedImages.size, '/', images.length);
     };
     
-    // 브라우저가 idle 상태일 때 프리로딩 시작
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => preloadInBatches());
-    } else {
-      setTimeout(preloadInBatches, 500);
-    }
+    // 즉시 시작 (idle 대기 없이)
+    aggressivePreload();
   }, [images]);
+
+  // 컴포넌트 마운트 시 즉시 config 이미지들도 프리로딩
+  useEffect(() => {
+    const configImages = weddingConfig.gallery.images;
+    if (configImages.length > 0) {
+      configImages.forEach((img, index) => {
+        setTimeout(() => {
+          preloadImage(img).catch(() => {});
+        }, index * 100);
+      });
+    }
+  }, []);
 
   // 브라우저 뒤로가기 처리(확대 상태)
   useEffect(() => {

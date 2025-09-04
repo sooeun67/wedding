@@ -121,7 +121,7 @@ const CircularImage = styled(Image)`
 const HeartContainer = styled.div`
   font-size: 2.5rem;
   color: #FF69B4;
-  margin-top: 90px;
+  margin-top: 45px;
   display: flex;
   align-items: center;
   height: 180px;
