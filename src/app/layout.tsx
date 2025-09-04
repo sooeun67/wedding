@@ -57,13 +57,21 @@ export default function RootLayout({
         <meta name="generator" content={`Wedding-Template-${watermarkId}`} />
         <meta name="description" content={metaDescription} />
         
-        {/* 📌 Open Graph 메타 태그 (카카오톡, 슬랙 썸네일) */}
+        {/* 📌 Open Graph 메타 태그 (카카오톡, 슬랙 썸네일) - 다중 설정 */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={weddingConfig.meta.title} />
         <meta property="og:description" content={weddingConfig.meta.description} />
-        <meta property="og:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.main.image}`} />
+        
+        {/* 📌 이미지 URL 다중 설정 (카카오톡 호환성) */}
+        <meta property="og:image" content="https://ekckyj-wedding.vercel.app/api/og" />
+        <meta property="og:image:url" content="https://ekckyj-wedding.vercel.app/api/og" />
+        <meta property="og:image:secure_url" content="https://ekckyj-wedding.vercel.app/api/og" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:alt" content="엄규철과 김유진의 웨딩 청첩장" />
+        
+        {/* 📌 URL 및 사이트 정보 */}
         <meta property="og:url" content="https://ekckyj-wedding.vercel.app" />
         <meta property="og:site_name" content="웨딩 청첩장" />
         
@@ -71,16 +79,18 @@ export default function RootLayout({
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={weddingConfig.meta.title} />
         <meta name="twitter:description" content={weddingConfig.meta.description} />
-        <meta name="twitter:image" content={`https://ekckyj-wedding.vercel.app${weddingConfig.main.image}`} />
+        <meta name="twitter:image" content="https://ekckyj-wedding.vercel.app/api/og" />
+        <meta name="twitter:image:alt" content="엄규철과 김유진의 웨딩 청첩장" />
+        
+        {/* 📌 카카오톡 전용 메타 태그 */}
+        <meta name="kakao:title" content={weddingConfig.meta.title} />
+        <meta name="kakao:description" content={weddingConfig.meta.description} />
+        <meta name="kakao:image" content="https://ekckyj-wedding.vercel.app/api/og" />
         
         {/* 📌 추가 메타 태그 */}
         <meta name="author" content="엄규철 & 김유진" />
         <meta name="keywords" content="웨딩, 결혼식, 청첩장, 엄규철, 김유진, 2026" />
-        
-        {/* 📌 Open Graph 디버깅용 추가 메타 태그 */}
         <meta property="og:locale" content="ko_KR" />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:alt" content="엄규철과 김유진의 웨딩 청첩장" />
         
         {/* 📌 추가 보안 메타 태그 */}
         <meta name="robots" content="index, follow" />
