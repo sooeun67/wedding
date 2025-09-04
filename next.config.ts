@@ -4,7 +4,7 @@ const nextConfig = {
     styledComponents: true,
   },
   
-  // 이미지 최적화 설정
+  // 이미지 최적화 설정 (압축된 이미지에 최적화)
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
@@ -12,11 +12,8 @@ const nextConfig = {
     minimumCacheTTL: 31536000, // 1년 캐시
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // 와이파이 환경에서의 로딩 최적화
-    loader: 'default',
-    unoptimized: false,
-    // 이미지 품질 최적화
-    quality: 85,
+    // 압축된 이미지에 맞게 품질 조정 (이미 압축되었으므로 높은 품질 유지)
+    quality: 95,
     // 더 빠른 로딩을 위한 설정
     remotePatterns: [
       {
