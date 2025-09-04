@@ -23,9 +23,9 @@ const VideoSection = ({ bgColor = 'white' }: VideoSectionProps) => {
   return (
     <VideoSectionContainer $bgColor={bgColor}>
       <VideoContent>
-        <VideoTitle>💕 우리의 이야기</VideoTitle>
+        <VideoTitle>{weddingConfig.video.title}</VideoTitle>
         <VideoDescription>
-          함께한 시간들을 담은 영상입니다
+          {weddingConfig.video.description}
         </VideoDescription>
         
         <VideoWrapper>

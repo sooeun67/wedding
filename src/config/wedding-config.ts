@@ -153,7 +153,7 @@ export const weddingConfig = {
   // 동영상 설정
   video: {
     enabled: true, // 동영상 섹션 표시 여부
-    url: "https://vimeo.com/1115881517?fl=pl&fe=sh", // Vimeo, YouTube 등의 임베드 URL
+    url: "https://player.vimeo.com/video/1115881517", // Vimeo 임베드 URL
     title: "💕 2017.06.22 ~ ",
     description: "그리고 2026.01.24 ~ 새로운 사랑이 찾아온거야~💕",
   },
