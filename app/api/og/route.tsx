@@ -12,48 +12,57 @@ export async function GET() {
             height: '100%',
             width: '100%',
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
             backgroundColor: '#f8f6f0',
-            backgroundImage: 'url(https://ekckyj-wedding.vercel.app/images/main.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
             position: 'relative',
           }}
         >
-          {/* 오버레이 */}
+          {/* 왼쪽: 메인 이미지 */}
           <div
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              width: '50%',
+              height: '100%',
+              backgroundImage: 'url(https://ekckyj-wedding.vercel.app/images/main.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              position: 'relative',
             }}
-          />
+          >
+            {/* 이미지 오버레이 */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+              }}
+            />
+          </div>
           
-          {/* 텍스트 컨테이너 */}
+          {/* 오른쪽: 텍스트 영역 */}
           <div
             style={{
+              width: '50%',
+              height: '100%',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'white',
-              textAlign: 'center',
-              zIndex: 1,
+              backgroundColor: 'rgba(248, 246, 240, 0.95)',
               padding: '40px',
+              position: 'relative',
             }}
           >
             <h1
               style={{
-                fontSize: '48px',
+                fontSize: '36px',
                 fontWeight: 'bold',
                 margin: '0 0 20px 0',
-                textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                color: '#2c2c2c',
+                textAlign: 'center',
+                lineHeight: '1.2',
               }}
             >
               {weddingConfig.meta.title}
@@ -61,9 +70,11 @@ export async function GET() {
             
             <p
               style={{
-                fontSize: '24px',
-                margin: '0 0 20px 0',
-                textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                fontSize: '20px',
+                margin: '0 0 15px 0',
+                color: '#666',
+                textAlign: 'center',
+                fontWeight: '500',
               }}
             >
               {weddingConfig.main.date}
@@ -71,9 +82,11 @@ export async function GET() {
             
             <p
               style={{
-                fontSize: '20px',
+                fontSize: '16px',
                 margin: '0',
-                textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                color: '#888',
+                textAlign: 'center',
+                lineHeight: '1.4',
               }}
             >
               {weddingConfig.main.venue}
