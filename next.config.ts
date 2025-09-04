@@ -12,8 +12,6 @@ const nextConfig = {
     minimumCacheTTL: 31536000, // 1년 캐시
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // 압축된 이미지에 맞게 품질 조정 (이미 압축되었으므로 높은 품질 유지)
-    quality: 95,
     // 더 빠른 로딩을 위한 설정
     remotePatterns: [
       {
