@@ -61,7 +61,7 @@ const CouplePhotosSectionContainer = styled.section<{ $bgColor: 'white' | 'beige
 const PhotosContainer = styled.div`
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 2rem;
   max-width: 600px;
   margin: 0 auto;
@@ -120,17 +120,22 @@ const CircularImage = styled(Image)`
 
 const HeartContainer = styled.div`
   font-size: 2.5rem;
-  color: #E74C3C;
-  margin-bottom: 2rem;
+  color: #FF69B4;
+  margin-top: 75px;
+  display: flex;
+  align-items: center;
+  height: 150px;
   
   @media (max-width: 480px) {
     font-size: 2rem;
-    margin-bottom: 1.5rem;
+    margin-top: 60px;
+    height: 120px;
   }
   
   @media (max-width: 400px) {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 50px;
+    height: 100px;
   }
 `;
 
