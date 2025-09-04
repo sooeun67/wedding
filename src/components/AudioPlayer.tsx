@@ -35,31 +35,31 @@ export default function AudioPlayer() {
       <button
         onClick={toggleMute}
         style={{
-          background: "rgba(0,0,0,0.6)",
+          background: "rgba(255,192,203,0.8)",
           color: "white",
           border: "none",
           borderRadius: "50%",
-          width: "48px",
-          height: "48px",
+          width: "36px",
+          height: "36px",
           cursor: "pointer",
-          fontSize: "20px",
+          fontSize: "16px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           transition: "all 0.3s ease",
           backdropFilter: "blur(10px)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
+          boxShadow: "0 2px 8px rgba(255,192,203,0.4)"
         }}
         onMouseOver={(e) => {
-          e.currentTarget.style.background = "rgba(0,0,0,0.8)";
+          e.currentTarget.style.background = "rgba(255,182,193,0.9)";
           e.currentTarget.style.transform = "scale(1.1)";
         }}
         onMouseOut={(e) => {
-          e.currentTarget.style.background = "rgba(0,0,0,0.6)";
+          e.currentTarget.style.background = "rgba(255,192,203,0.8)";
           e.currentTarget.style.transform = "scale(1)";
         }}
       >
-        {muted ? "🔇" : "🔊"}
+        {muted ? "💕" : "🎵"}
       </button>
     </div>
   );

@@ -21,6 +21,7 @@ const GallerySection = dynamic(() => import('../src/components/sections/GalleryS
 });
 
 const InvitationSection = dynamic(() => import('../src/components/sections/InvitationSection'));
+const CouplePhotosSection = dynamic(() => import('../src/components/sections/CouplePhotosSection'));
 const RsvpSection = dynamic(() => import('../src/components/sections/RsvpSection'));
 const AccountSection = dynamic(() => import('../src/components/sections/AccountSection'));
 const Footer = dynamic(() => import('../src/components/sections/Footer'));
@@ -37,6 +38,7 @@ export default function Home() {
     // MainSection은 색상 계산에서 제외 (항상 기본 스타일)
     sections.push('invitation'); // InvitationSection
     sections.push('date'); // DateSection  
+    sections.push('couple-photos'); // CouplePhotosSection
     sections.push('venue'); // VenueSection
     
     if (galleryPosition === 'middle') {
@@ -67,6 +69,7 @@ export default function Home() {
       <MainSection />
       <InvitationSection bgColor={sectionColorMap['invitation']} />
       <DateSection bgColor={sectionColorMap['date']} />
+      <CouplePhotosSection bgColor={sectionColorMap['couple-photos']} />
       <VenueSection bgColor={sectionColorMap['venue']} />
       {galleryPosition === 'middle' && <GallerySection bgColor={sectionColorMap['gallery-middle']} />}
       {showRsvp && <RsvpSection bgColor={sectionColorMap['rsvp']} />}
