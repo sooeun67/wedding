@@ -150,6 +150,14 @@ export const weddingConfig = {
     }
   },
 
+  // 동영상 설정
+  video: {
+    enabled: false, // 동영상 섹션 표시 여부
+    url: "", // Vimeo, YouTube 등의 임베드 URL
+    title: "우리의 이야기",
+    description: "함께한 시간들을 담은 영상입니다",
+  },
+
   // RSVP 설정
   rsvp: {
     enabled: false, // RSVP 섹션 표시 여부

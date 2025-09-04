@@ -22,6 +22,7 @@ const GallerySection = dynamic(() => import('../src/components/sections/GalleryS
 
 const InvitationSection = dynamic(() => import('../src/components/sections/InvitationSection'));
 const CouplePhotosSection = dynamic(() => import('../src/components/sections/CouplePhotosSection'));
+const VideoSection = dynamic(() => import('../src/components/sections/VideoSection'));
 const RsvpSection = dynamic(() => import('../src/components/sections/RsvpSection'));
 const AccountSection = dynamic(() => import('../src/components/sections/AccountSection'));
 const NoFlowersSection = dynamic(() => import('../src/components/sections/NoFlowersSection'));
@@ -32,6 +33,7 @@ export default function Home() {
   // 갤러리 위치 설정
   const galleryPosition = weddingConfig.gallery.position || 'middle';
   const showRsvp = weddingConfig.rsvp?.enabled ?? true;
+  const showVideo = weddingConfig.video?.enabled ?? false;
 
   // 실제 렌더링되는 섹션들의 순서를 계산하여 색상 인덱스 결정
   const sectionColorMap = useMemo(() => {
@@ -41,6 +43,11 @@ export default function Home() {
     sections.push('invitation'); // InvitationSection
     sections.push('date'); // DateSection  
     sections.push('couple-photos'); // CouplePhotosSection
+    
+    if (showVideo) {
+      sections.push('video'); // VideoSection
+    }
+    
     sections.push('venue'); // VenueSection
     
     if (galleryPosition === 'middle') {
@@ -67,7 +74,7 @@ export default function Home() {
     });
     
     return colorMap;
-  }, [galleryPosition, showRsvp]);
+  }, [galleryPosition, showRsvp, showVideo]);
 
   return (
     <main>
@@ -75,6 +82,7 @@ export default function Home() {
       <InvitationSection bgColor={sectionColorMap['invitation']} />
       <DateSection bgColor={sectionColorMap['date']} />
       <CouplePhotosSection bgColor={sectionColorMap['couple-photos']} />
+      {showVideo && <VideoSection bgColor={sectionColorMap['video']} />}
       <VenueSection bgColor={sectionColorMap['venue']} />
       {galleryPosition === 'middle' && <GallerySection bgColor={sectionColorMap['gallery-middle']} />}
       {showRsvp && <RsvpSection bgColor={sectionColorMap['rsvp']} />}
