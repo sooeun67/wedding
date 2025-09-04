@@ -18,7 +18,7 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
               src="/images/groom-child.jpg"
               alt="신랑 어릴 때 사진"
               fill
-              sizes="150px"
+              sizes="180px"
               style={{ objectFit: 'cover' }}
             />
           </CircularImageContainer>
@@ -38,7 +38,7 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
               src="/images/bride-child.jpg"
               alt="신부 어릴 때 사진"
               fill
-              sizes="150px"
+              sizes="180px"
               style={{ objectFit: 'cover' }}
             />
           </CircularImageContainer>
@@ -84,8 +84,8 @@ const PhotoWrapper = styled.div`
 
 const CircularImageContainer = styled.div`
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   overflow: hidden;
   border: 4px solid #f0f0f0;
@@ -98,14 +98,14 @@ const CircularImageContainer = styled.div`
   }
   
   @media (max-width: 480px) {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     border-width: 3px;
   }
   
   @media (max-width: 400px) {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-width: 2px;
   }
 `;
@@ -121,21 +121,21 @@ const CircularImage = styled(Image)`
 const HeartContainer = styled.div`
   font-size: 2.5rem;
   color: #FF69B4;
-  margin-top: 75px;
+  margin-top: 90px;
   display: flex;
   align-items: center;
-  height: 150px;
+  height: 180px;
   
   @media (max-width: 480px) {
     font-size: 2rem;
-    margin-top: 60px;
-    height: 120px;
+    margin-top: 75px;
+    height: 150px;
   }
   
   @media (max-width: 400px) {
     font-size: 1.5rem;
-    margin-top: 50px;
-    height: 100px;
+    margin-top: 60px;
+    height: 120px;
   }
 `;
 

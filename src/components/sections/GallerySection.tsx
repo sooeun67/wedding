@@ -43,6 +43,7 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
   // 먼저 config 이미지를 즉시 보여주고, API가 오면 교체(초기 체감속도↑)
   const [images, setImages] = useState<string[]>(weddingConfig.gallery.images);
   const [error, setError] = useState<string | null>(null);
+  const [preloadedImages, setPreloadedImages] = useState<Set<string>>(new Set());
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -57,6 +58,21 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
 
   // 레이아웃 모드
   const galleryLayout = weddingConfig.gallery.layout || 'scroll';
+
+  // 이미지 프리로딩 함수
+  const preloadImage = (src: string) => {
+    if (preloadedImages.has(src)) return Promise.resolve();
+    
+    return new Promise<void>((resolve, reject) => {
+      const img = new window.Image();
+      img.onload = () => {
+        setPreloadedImages(prev => new Set([...prev, src]));
+        resolve();
+      };
+      img.onerror = reject;
+      img.src = src;
+    });
+  };
 
   // API는 백그라운드로 시도(성공하면 교체, 실패해도 화면은 유지)
   useEffect(() => {
@@ -75,6 +91,37 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
     })();
     return () => { cancelled = true; };
   }, []);
+
+  // 이미지 목록이 로드된 후 우선순위별로 프리로딩
+  useEffect(() => {
+    if (!images.length) return;
+    
+    const preloadInBatches = async () => {
+      // 첫 3개 이미지를 우선적으로 프리로딩
+      const priorityImages = images.slice(0, 3);
+      const promises = priorityImages.map(img => preloadImage(img).catch(() => {}));
+      await Promise.allSettled(promises);
+      
+      // 나머지 이미지들을 순차적으로 프리로딩 (네트워크 부하 방지)
+      const remainingImages = images.slice(3);
+      for (const img of remainingImages) {
+        try {
+          await preloadImage(img);
+          // 각 이미지 사이에 작은 딜레이 (브라우저 부하 방지)
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } catch {
+          // 에러 무시하고 계속 진행
+        }
+      }
+    };
+    
+    // 브라우저가 idle 상태일 때 프리로딩 시작
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => preloadInBatches());
+    } else {
+      setTimeout(preloadInBatches, 500);
+    }
+  }, [images]);
 
   // 브라우저 뒤로가기 처리(확대 상태)
   useEffect(() => {
@@ -169,27 +216,51 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
     const imageIndex = images.indexOf(image);
     setExpandedImage(image);
     setExpandedImageIndex(imageIndex);
-    setIsExpandedImageLoading(true);
+    
+    // 이미지가 이미 프리로드되었는지 확인
+    const isPreloaded = preloadedImages.has(image);
+    setIsExpandedImageLoading(!isPreloaded);
+    
     setTransitionDir(null);
     document.body.style.overflow = 'hidden';
+    
+    // 인접한 이미지들도 미리 로드
+    const adjacentImages = [
+      images[imageIndex - 1],
+      images[imageIndex + 1]
+    ].filter(Boolean);
+    
+    adjacentImages.forEach(img => {
+      preloadImage(img).catch(() => {});
+    });
   };
 
   const goToPreviousImage = () => {
     if (expandedImageIndex > 0) {
       const newIndex = expandedImageIndex - 1;
+      const newImage = images[newIndex];
+      
       setTransitionDir('prev');
       setExpandedImageIndex(newIndex);
-      setExpandedImage(images[newIndex]);
-      setIsExpandedImageLoading(true);
+      setExpandedImage(newImage);
+      
+      // 이미지가 프리로드되었는지 확인
+      const isPreloaded = preloadedImages.has(newImage);
+      setIsExpandedImageLoading(!isPreloaded);
     }
   };
   const goToNextImage = () => {
     if (expandedImageIndex < images.length - 1) {
       const newIndex = expandedImageIndex + 1;
+      const newImage = images[newIndex];
+      
       setTransitionDir('next');
       setExpandedImageIndex(newIndex);
-      setExpandedImage(images[newIndex]);
-      setIsExpandedImageLoading(true);
+      setExpandedImage(newImage);
+      
+      // 이미지가 프리로드되었는지 확인
+      const isPreloaded = preloadedImages.has(newImage);
+      setIsExpandedImageLoading(!isPreloaded);
     }
   };
 
@@ -204,7 +275,13 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
     }
   };
 
-  const handleExpandedImageLoad = () => setIsExpandedImageLoading(false);
+  const handleExpandedImageLoad = () => {
+    setIsExpandedImageLoading(false);
+    // 로드 완료된 이미지를 프리로드 캐시에 추가
+    if (expandedImage) {
+      setPreloadedImages(prev => new Set([...prev, expandedImage]));
+    }
+  };
   const handleExpandedImageError = () => setIsExpandedImageLoading(false);
 
   if ((images?.length ?? 0) === 0) {
@@ -229,9 +306,9 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
                   src={image}
                   alt={`웨딩 갤러리 이미지 ${index + 1}`}
                   fill
-                  priority={index === 0}
-                  loading={index === 1 ? 'eager' : 'lazy'}
-                  quality={70}
+                  priority={index < 2}
+                  loading={index < 3 ? 'eager' : 'lazy'}
+                  quality={75}
                   sizes="(max-width:768px) calc(33.333vw - 0.5rem), 260px"
                   placeholder="empty"
                   style={{ objectFit: 'cover' }}
@@ -256,9 +333,9 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
                     src={image}
                     alt={`웨딩 갤러리 이미지 ${index + 1}`}
                     fill
-                    priority={index === 0}
-                    loading={index === 1 ? 'eager' : 'lazy'}
-                    quality={70}
+                    priority={index < 2}
+                    loading={index < 3 ? 'eager' : 'lazy'}
+                    quality={75}
                     sizes="(max-width:768px) 250px, 300px"
                     placeholder="empty"
                     style={{ objectFit: 'cover' }}
@@ -300,8 +377,8 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
                 src={expandedImage}
                 alt="확대된 웨딩 갤러리 이미지"
                 fill
-                loading="eager"
-                quality={80}
+                priority
+                quality={90}
                 sizes="90vw"
                 // style={{ objectFit: 'contain', background: 'transparent' }}
                 style={{ 

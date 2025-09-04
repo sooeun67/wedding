@@ -11,7 +11,7 @@ const NoFlowersSection = ({ bgColor = 'white' }: NoFlowersSectionProps) => {
   return (
     <NoFlowersSectionContainer $bgColor={bgColor}>
       <ContentContainer>
-        <FlowerIcon>🌸</FlowerIcon>
+        <FlowerIcon>🌷</FlowerIcon>
         <MessageContainer>
           <MainMessage>화환은 정중히 사양합니다.</MainMessage>
           <SubMessage>축하해 주시는 마음만 감사히 받겠습니다.</SubMessage>
@@ -42,11 +42,11 @@ const ContentContainer = styled.div`
 `;
 
 const FlowerIcon = styled.div`
-  font-size: 3rem;
+  font-size: 2rem;
   margin-bottom: 1.5rem;
   
   @media (max-width: 480px) {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     margin-bottom: 1rem;
   }
 `;
