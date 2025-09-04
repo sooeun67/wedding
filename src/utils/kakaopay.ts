@@ -6,7 +6,7 @@ export interface BankInfo {
   holder: string;
 }
 
-// 카카오페이 앱으로 이동하는 딥링크 함수
+// 카카오톡 송금하기로 이동하는 딥링크 함수
 export const openKakaoPay = (bankInfo: BankInfo) => {
   const { bank, number, holder } = bankInfo;
   
@@ -17,13 +17,13 @@ export const openKakaoPay = (bankInfo: BankInfo) => {
   const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   
   if (isMobile) {
-    // 카카오페이 앱 딥링크 시도
-    const kakaopayUrl = `kakaopay://`;
+    // 카카오톡 송금하기 딥링크 시도
+    const kakaotalkPayUrl = `kakaotalk://kakaopay/home`;
     
     // 딥링크 시도 후 앱스토어로 이동하는 fallback 설정
     const timeout = setTimeout(() => {
       // 2초 후에도 페이지를 벗어나지 않았다면 앱이 설치되지 않은 것으로 판단
-      window.location.href = getAppStoreUrl();
+      window.location.href = getKakaotalkAppStoreUrl();
     }, 2000);
     
     // 페이지를 벗어날 때 타이머 클리어
@@ -35,16 +35,16 @@ export const openKakaoPay = (bankInfo: BankInfo) => {
     document.addEventListener('visibilitychange', clearTimeoutOnVisibilityChange);
     
     // 딥링크 실행
-    window.location.href = kakaopayUrl;
+    window.location.href = kakaotalkPayUrl;
     
     // 사용자에게 안내 메시지 표시
     setTimeout(() => {
-      alert(`카카오페이로 이동합니다.\n\n계좌 정보가 복사되었습니다:\n${bank} ${number}\n예금주: ${holder}\n\n송금 시 위 정보를 사용해주세요.`);
+      alert(`카카오톡 송금하기로 이동합니다.\n\n계좌 정보가 복사되었습니다:\n${bank} ${number}\n예금주: ${holder}\n\n카카오톡에서 송금하기 → 계좌송금을 이용해주세요.`);
     }, 100);
     
   } else {
     // 데스크톱에서는 QR코드나 안내 메시지 표시
-    alert(`모바일에서 카카오페이를 이용해주세요.\n\n계좌 정보가 복사되었습니다:\n${bank} ${number}\n예금주: ${holder}`);
+    alert(`모바일에서 카카오톡을 이용해주세요.\n\n계좌 정보가 복사되었습니다:\n${bank} ${number}\n예금주: ${holder}`);
   }
 };
 
@@ -91,14 +91,14 @@ const fallbackCopyTextToClipboard = (text: string): boolean => {
   }
 };
 
-// 앱스토어 URL 반환 (iOS/Android 구분)
-const getAppStoreUrl = (): string => {
+// 카카오톡 앱스토어 URL 반환 (iOS/Android 구분)
+const getKakaotalkAppStoreUrl = (): string => {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   
   if (isIOS) {
-    return 'https://apps.apple.com/kr/app/kakaopay/id1464496236';
+    return 'https://apps.apple.com/kr/app/kakaotalk/id362057947';
   } else {
-    return 'https://play.google.com/store/apps/details?id=com.kakaopay.app';
+    return 'https://play.google.com/store/apps/details?id=com.kakao.talk';
   }
 };
 

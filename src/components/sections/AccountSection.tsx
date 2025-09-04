@@ -147,7 +147,7 @@ const AccountSection = ({ bgColor = 'white' }: AccountSectionProps) => {
               openKakaoPay(accountInfo);
             }}
           >
-            💰
+            Pay
           </KakaoPayButton>
         </ButtonGroup>
       </AccountRow>
@@ -428,23 +428,24 @@ const CopyButton = styled.button`
 `;
 
 const KakaoPayButton = styled.button`
-  background: linear-gradient(135deg, #FEE500, #FFD700);
+  background: #FEE500;
   border: none;
   color: #3C1E1E;
-  padding: 0.35rem 0.5rem;
+  padding: 0.35rem 0.6rem;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
   white-space: nowrap;
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(254, 229, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(254, 229, 0, 0.3);
   
   &:hover {
-    background: linear-gradient(135deg, #FFD700, #FEE500);
+    background: #FFD000;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(254, 229, 0, 0.4);
+    box-shadow: 0 2px 6px rgba(254, 229, 0, 0.4);
   }
   
   &:active {
@@ -459,7 +460,7 @@ const KakaoPayButton = styled.button`
     left: 50%;
     width: 5px;
     height: 5px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(60, 30, 30, 0.2);
     opacity: 0;
     border-radius: 100%;
     transform: scale(1, 1) translate(-50%);
