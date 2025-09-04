@@ -1,5 +1,17 @@
 # 🔥 Firebase 방명록 설정 가이드
 
+> **실시간 방명록 + 자동 백업 시스템**  
+> 전 세계 어디서든 실시간으로 방명록이 동기화됩니다!
+
+## 🎯 주요 기능
+
+- ✅ **실시간 동기화**: 전 세계 어디서든 실시간 업데이트
+- ✅ **자동 백업**: Firebase 클라우드에 자동 저장
+- ✅ **로컬 백업**: Firebase 연결 실패 시 로컬 저장
+- ✅ **데이터 마이그레이션**: 기존 로컬 데이터 자동 이전
+- ✅ **무료 사용**: 월 50,000회 읽기 무료
+- ✅ **보안**: 읽기만 허용, 수정/삭제 방지
+
 ## 1. 📦 Firebase 패키지 설치
 
 ```bash
@@ -21,29 +33,43 @@ npm install firebase
 3. **"앱 등록"** 클릭
 4. **설정 정보 복사** (firebaseConfig 객체)
 
-## 4. 📝 설정 정보 입력
+## 4. 📝 환경 변수 설정
 
-`src/lib/firebase.ts` 파일에서 설정 정보 교체:
+`.env.local` 파일에 Firebase 설정 정보 추가:
+
+```bash
+# Firebase 설정 (방명록용)
+NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+```
+
+## 5. 🔧 Firebase 설정 파일 확인
+
+`src/lib/firebase.ts` 파일이 환경 변수를 사용하도록 설정되어 있는지 확인:
 
 ```typescript
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 ```
 
-## 5. 🗄️ Firestore 데이터베이스 설정
+## 6. 🗄️ Firestore 데이터베이스 설정
 
 1. Firebase Console → **"Firestore Database"**
 2. **"데이터베이스 만들기"** 클릭
 3. **"테스트 모드에서 시작"** 선택 (나중에 보안 규칙 수정 가능)
 4. 지역 선택 (asia-northeast3 - 서울 추천)
 
-## 6. 🔒 보안 규칙 설정 (중요!)
+## 7. 🔒 보안 규칙 설정 (중요!)
 
 Firestore → **"규칙"** 탭에서 다음 규칙 적용:
 
@@ -68,13 +94,13 @@ service cloud.firestore {
 }
 ```
 
-## 7. 🚀 배포 및 테스트
+## 8. 🚀 배포 및 테스트
 
 1. 프로젝트 빌드: `npm run build`
 2. 배포 후 방명록 테스트
 3. 다른 브라우저/기기에서 실시간 동기화 확인
 
-## 8. 📊 모니터링
+## 9. 📊 모니터링
 
 Firebase Console에서 확인 가능:
 - **Firestore**: 저장된 방명록 데이터
