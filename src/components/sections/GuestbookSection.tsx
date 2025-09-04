@@ -75,7 +75,7 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
     setIsSubmitting(false);
 
     // 성공 메시지
-    alert('축하 메시지가 등록되었습니다! 💕');
+    alert('방명록이 등록되었습니다! 💕');
   };
 
   // 날짜 포맷팅
@@ -92,8 +92,11 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
 
   return (
     <GuestbookSectionContainer $bgColor={bgColor}>
-      <SectionTitle>축하 메시지</SectionTitle>
-      <SectionSubtitle>소중한 마음을 전해주세요 💝</SectionSubtitle>
+      <SectionTitle>방명록</SectionTitle>
+      <SectionSubtitle>
+        따뜻한 마음이 담긴 축하의 글을 남겨주시면<br />
+        소중한 추억으로 간직하겠습니다. 💝
+      </SectionSubtitle>
 
       <FormContainer>
         <GuestbookForm onSubmit={handleSubmit}>
@@ -112,7 +115,7 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
           <InputGroup>
             <InputLabel>메시지</InputLabel>
             <MessageTextarea
-              placeholder="축하 메시지를 남겨주세요 (200자 이내)"
+              placeholder="축하의 글을 남겨주세요 (200자 이내)"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               maxLength={200}
@@ -125,13 +128,13 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
           </InputGroup>
 
           <SubmitButton type="submit" disabled={isSubmitting || !name.trim() || !message.trim()}>
-            {isSubmitting ? '등록 중...' : '메시지 등록하기'}
+            {isSubmitting ? '등록 중...' : '방명록 등록하기'}
           </SubmitButton>
         </GuestbookForm>
       </FormContainer>
 
       <EntriesContainer>
-        <EntriesTitle>축하 메시지 ({entries.length})</EntriesTitle>
+        <EntriesTitle>방명록 ({entries.length})</EntriesTitle>
         
         {entries.length === 0 ? (
           <EmptyMessage>
