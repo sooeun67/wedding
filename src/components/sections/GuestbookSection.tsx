@@ -163,11 +163,6 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
         따뜻한 마음이 담긴 축하의 글을 남겨주시면<br />
         소중한 추억으로 간직하겠습니다. 💝
       </SectionSubtitle>
-      
-      {/* 연결 상태 표시 */}
-      <ConnectionStatus $isConnected={isFirebaseConnected}>
-        {isFirebaseConnected ? '🌐 실시간 동기화 중' : '📱 로컬 저장'}
-      </ConnectionStatus>
 
       <FormContainer>
         <GuestbookForm onSubmit={handleSubmit}>
@@ -251,20 +246,7 @@ const SectionSubtitle = styled.p`
   text-align: center;
   font-size: 1rem;
   color: #666;
-  margin-bottom: 1rem;
-`;
-
-const ConnectionStatus = styled.div<{ $isConnected: boolean }>`
-  text-align: center;
-  font-size: 0.8rem;
-  color: ${props => props.$isConnected ? '#28a745' : '#ffc107'};
-  margin-bottom: 2rem;
-  padding: 0.5rem 1rem;
-  background: ${props => props.$isConnected ? '#d4edda' : '#fff3cd'};
-  border-radius: 20px;
-  display: inline-block;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  margin-bottom: 3rem;
 `;
 
 const LoadingMessage = styled.div`
