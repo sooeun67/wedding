@@ -63,7 +63,7 @@ const VideoSection = ({ bgColor = 'white' }: VideoSectionProps) => {
         </VideoWrapper>
         
         <VideoCaption>
-            그리고 2026.01.24 ~ 새로운 사랑이 찾아온거야~💕
+            그리고 2026.01.24 ~ 💕
         </VideoCaption>
       </VideoContent>
     </VideoSectionContainer>
