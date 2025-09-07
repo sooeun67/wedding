@@ -14,7 +14,11 @@ const NoFlowersSection = ({ bgColor = 'white' }: NoFlowersSectionProps) => {
         <FlowerIcon>🌷</FlowerIcon>
         <MessageContainer>
           <MainMessage>축하 화한 안내</MainMessage>
-          <SubMessage>식장 사정에 따라\n화환은 정중히 사양합니다.\n축하해 주시는 마음만 감사히 받겠습니다.</SubMessage>
+          <SubMessage>
+            식장 사정에 따라<br />
+            화환은 정중히 사양합니다.<br />
+            축하해 주시는 마음만 감사히 받겠습니다.
+          </SubMessage>
         </MessageContainer>
       </ContentContainer>
     </NoFlowersSectionContainer>
