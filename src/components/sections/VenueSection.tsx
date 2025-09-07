@@ -30,17 +30,6 @@ const VenueSection = ({ bgColor = 'white' }: VenueSectionProps) => {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [mapError, setMapError] = useState(false);
-  // 배차 안내 펼침/접기 상태 관리
-  const [expandedShuttle, setExpandedShuttle] = useState<'groom' | 'bride' | null>(null);
-  
-  // 배차 안내 펼침/접기 토글 함수
-  const toggleShuttle = (shuttle: 'groom' | 'bride') => {
-    if (expandedShuttle === shuttle) {
-      setExpandedShuttle(null);
-    } else {
-      setExpandedShuttle(shuttle);
-    }
-  };
   
   // 디버깅 정보 출력
   useEffect(() => {
@@ -241,11 +230,11 @@ const VenueSection = ({ bgColor = 'white' }: VenueSectionProps) => {
       <TransportCard>
         <CardTitle>대중교통 안내</CardTitle>
         <TransportItem>
-          <TransportLabel>지하철</TransportLabel>
+          <TransportLabel>지하철 이용 시</TransportLabel>
           <TransportText>{weddingConfig.venue.transportation.subway}</TransportText>
         </TransportItem>
         <TransportItem>
-          <TransportLabel>버스</TransportLabel>
+          <TransportLabel>버스 이용 시</TransportLabel>
           <TransportText>{weddingConfig.venue.transportation.bus}</TransportText>
         </TransportItem>
       </TransportCard>
@@ -255,73 +244,6 @@ const VenueSection = ({ bgColor = 'white' }: VenueSectionProps) => {
         <TransportText>{weddingConfig.venue.parking}</TransportText>
       </ParkingCard>
       
-      {/* 신랑측 배차 안내 - 정보가 있을 때만 표시 */}
-      {weddingConfig.venue.groomShuttle && (
-        <ShuttleCard>
-          <ShuttleCardHeader onClick={() => toggleShuttle('groom')} $isExpanded={expandedShuttle === 'groom'}>
-            <CardTitle>신랑측 배차 안내</CardTitle>
-            <ExpandIcon $isExpanded={expandedShuttle === 'groom'}>
-              {expandedShuttle === 'groom' ? '−' : '+'}
-            </ExpandIcon>
-          </ShuttleCardHeader>
-          
-          {expandedShuttle === 'groom' && (
-            <ShuttleContent>
-              <ShuttleInfo>
-                <ShuttleLabel>탑승 장소</ShuttleLabel>
-                <ShuttleText>{formatTextWithLineBreaks(weddingConfig.venue.groomShuttle.location)}</ShuttleText>
-              </ShuttleInfo>
-              <ShuttleInfo>
-                <ShuttleLabel>출발 시간</ShuttleLabel>
-                <ShuttleText>{weddingConfig.venue.groomShuttle.departureTime}</ShuttleText>
-              </ShuttleInfo>
-              <ShuttleInfo>
-                <ShuttleLabel>인솔자</ShuttleLabel>
-                <ShuttleText>
-                  {weddingConfig.venue.groomShuttle.contact.name} ({weddingConfig.venue.groomShuttle.contact.tel})
-                  <ShuttleCallButton href={`tel:${weddingConfig.venue.groomShuttle.contact.tel}`}>
-                    전화
-                  </ShuttleCallButton>
-                </ShuttleText>
-              </ShuttleInfo>
-            </ShuttleContent>
-          )}
-        </ShuttleCard>
-      )}
-      
-      {/* 신부측 배차 안내 - 정보가 있을 때만 표시 */}
-      {weddingConfig.venue.brideShuttle && (
-        <ShuttleCard>
-          <ShuttleCardHeader onClick={() => toggleShuttle('bride')} $isExpanded={expandedShuttle === 'bride'}>
-            <CardTitle>신부측 배차 안내</CardTitle>
-            <ExpandIcon $isExpanded={expandedShuttle === 'bride'}>
-              {expandedShuttle === 'bride' ? '−' : '+'}
-            </ExpandIcon>
-          </ShuttleCardHeader>
-          
-          {expandedShuttle === 'bride' && (
-            <ShuttleContent>
-              <ShuttleInfo>
-                <ShuttleLabel>탑승 장소</ShuttleLabel>
-                <ShuttleText>{formatTextWithLineBreaks(weddingConfig.venue.brideShuttle.location)}</ShuttleText>
-              </ShuttleInfo>
-              <ShuttleInfo>
-                <ShuttleLabel>출발 시간</ShuttleLabel>
-                <ShuttleText>{weddingConfig.venue.brideShuttle.departureTime}</ShuttleText>
-              </ShuttleInfo>
-              <ShuttleInfo>
-                <ShuttleLabel>인솔자</ShuttleLabel>
-                <ShuttleText>
-                  {weddingConfig.venue.brideShuttle.contact.name} ({weddingConfig.venue.brideShuttle.contact.tel})
-                  <ShuttleCallButton href={`tel:${weddingConfig.venue.brideShuttle.contact.tel}`}>
-                    전화
-                  </ShuttleCallButton>
-                </ShuttleText>
-              </ShuttleInfo>
-            </ShuttleContent>
-          )}
-        </ShuttleCard>
-      )}
     </VenueSectionContainer>
   );
 };
@@ -500,10 +422,6 @@ const Card = styled.div`
 
 const TransportCard = styled(Card)``;
 const ParkingCard = styled(Card)``;
-const ShuttleCard = styled(Card)`
-  padding: 0;
-  overflow: hidden;
-`;
 
 const CardTitle = styled.h4`
   font-weight: 500;
@@ -526,85 +444,5 @@ const TransportText = styled.p`
   white-space: pre-line;
 `;
 
-const ShuttleInfo = styled.div`
-  margin-bottom: 1rem;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-const ShuttleLabel = styled.p`
-  font-weight: 500;
-  font-size: 0.875rem;
-`;
-
-const ShuttleText = styled.p`
-  font-size: 0.875rem;
-  color: var(--text-medium);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const ShuttleCallButton = styled.a`
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.2rem 0.5rem;
-  font-size: 0.8rem;
-  text-decoration: none;
-  margin-left: 0.5rem;
-  position: relative;
-  overflow: hidden;
-  
-  &:active {
-    transform: translateY(1px);
-  }
-  
-  &:after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 5px;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.5);
-    opacity: 0;
-    border-radius: 100%;
-    transform: scale(1, 1) translate(-50%);
-    transform-origin: 50% 50%;
-  }
-  
-  &:active:after {
-    animation: ripple 0.6s ease-out;
-  }
-`;
-
-const ShuttleCardHeader = styled.div<{ $isExpanded: boolean }>`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  cursor: pointer;
-  border-bottom: ${props => props.$isExpanded ? '1px solid #eee' : 'none'};
-  
-  h4 {
-    margin: 0;
-  }
-`;
-
-const ExpandIcon = styled.span<{ $isExpanded: boolean }>`
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--secondary-color);
-  transition: transform 0.3s ease;
-  transform: ${props => props.$isExpanded ? 'rotate(0deg)' : 'rotate(0deg)'};
-`;
-
-const ShuttleContent = styled.div`
-  padding: 1rem 1.5rem 1.5rem;
-`;
 
 export default VenueSection; 
