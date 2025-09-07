@@ -27,6 +27,7 @@ const RsvpSection = dynamic(() => import('../src/components/sections/RsvpSection
 const AccountSection = dynamic(() => import('../src/components/sections/AccountSection'));
 const NoFlowersSection = dynamic(() => import('../src/components/sections/NoFlowersSection'));
 const GuestbookSection = dynamic(() => import('../src/components/sections/GuestbookSection'));
+const PhotoUploadSection = dynamic(() => import('../src/components/sections/PhotoUploadSection'));
 const Footer = dynamic(() => import('../src/components/sections/Footer'));
 
 export default function Home() {
@@ -66,6 +67,7 @@ export default function Home() {
     
     sections.push('no-flowers'); // NoFlowersSection
     sections.push('guestbook'); // GuestbookSection
+    sections.push('photo-upload'); // PhotoUploadSection
     
     // 각 섹션에 색상 인덱스 할당 (0부터 시작하여 번갈아가며)
     const colorMap: Record<string, 'white' | 'beige'> = {};
@@ -90,6 +92,7 @@ export default function Home() {
       {galleryPosition === 'bottom' && <GallerySection bgColor={sectionColorMap['gallery-bottom']} />}
       <NoFlowersSection bgColor={sectionColorMap['no-flowers']} />
       <GuestbookSection bgColor={sectionColorMap['guestbook']} />
+      <PhotoUploadSection bgColor={sectionColorMap['photo-upload']} />
       <Footer />
     </main>
   );
