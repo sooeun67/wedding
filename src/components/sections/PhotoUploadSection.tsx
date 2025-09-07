@@ -56,7 +56,11 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
 
       if (response.ok) {
         const result = await response.json();
-        alert('사진이 성공적으로 구글 드라이브에 업로드되었습니다!');
+        
+        // 성공 메시지와 앨범 링크 표시
+        const message = `${result.message}\n\n앨범에서 확인하기: ${result.albumUrl}`;
+        alert(message);
+        
         // 파일 입력 초기화
         event.target.value = '';
       } else {
@@ -80,7 +84,7 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
         <UploadIcon>📸</UploadIcon>
         <UploadTitle>결혼식 사진 공유</UploadTitle>
         <UploadDescription>
-          결혼식 사진을 구글 드라이브 앨범에<br />
+          결혼식 사진을 구글 포토 앨범에<br />
           업로드하여 공유해주세요
         </UploadDescription>
 
@@ -116,7 +120,7 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
         <UploadTips>
           <TipItem>• 이미지 파일만 업로드 가능합니다</TipItem>
           <TipItem>• 파일 크기는 10MB 이하로 제한됩니다</TipItem>
-          <TipItem>• 업로드된 사진은 구글 드라이브에 저장됩니다</TipItem>
+          <TipItem>• 업로드된 사진은 구글 포토 앨범에 저장됩니다</TipItem>
         </UploadTips>
       </UploadCard>
     </PhotoUploadSectionContainer>

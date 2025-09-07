@@ -170,4 +170,10 @@ export const weddingConfig = {
     channel: "#wedding-response",
     compactMessage: true, // 슬랙 메시지를 간결하게 표시
   },
+
+  // 구글 포토 앨범 설정
+  googlePhotos: {
+    albumId: "AF1QipM_QrLUSIDJxdgaNexhPCYsxnNa3-H91O21ha_-", // 구글 포토 앨범 ID
+    albumName: "결혼식 사진", // 앨범 이름
+  },
 }; 
