@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { google } from 'googleapis';
-import { GoogleAuth } from 'google-auth-library';
 
 export async function POST(request: NextRequest) {
   try {
     // 환경 변수 확인
     console.log('Environment variables check:');
-    console.log('GOOGLE_PROJECT_ID:', process.env.GOOGLE_PROJECT_ID ? '✅ Set' : '❌ Missing');
-    console.log('GOOGLE_CLIENT_EMAIL:', process.env.GOOGLE_CLIENT_EMAIL ? '✅ Set' : '❌ Missing');
+    console.log('GOOGLE_DRIVE_API_KEY:', process.env.GOOGLE_DRIVE_API_KEY ? '✅ Set' : '❌ Missing');
     console.log('GOOGLE_DRIVE_FOLDER_ID:', process.env.GOOGLE_DRIVE_FOLDER_ID ? '✅ Set' : '❌ Missing');
-    console.log('GOOGLE_PRIVATE_KEY:', process.env.GOOGLE_PRIVATE_KEY ? '✅ Set' : '❌ Missing');
 
     // FormData에서 파일 가져오기
     const formData = await request.formData();
@@ -41,56 +37,50 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Google Drive API 인증 설정
-    console.log('Setting up Google Auth...');
-    const auth = new GoogleAuth({
-      credentials: {
-        type: 'service_account',
-        project_id: process.env.GOOGLE_PROJECT_ID,
-        private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        client_email: process.env.GOOGLE_CLIENT_EMAIL,
-        client_id: process.env.GOOGLE_CLIENT_ID
-      },
-      scopes: ['https://www.googleapis.com/auth/drive.file']
-    });
-    console.log('Google Auth setup complete');
-
-    // Google Drive 클라이언트 생성
-    const drive = google.drive({ version: 'v3', auth });
-
     // 파일을 ArrayBuffer로 변환
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Google Drive에 파일 업로드
+    // Google Drive API로 파일 업로드
     console.log('Uploading to Google Drive...');
-    const fileMetadata = {
-      name: `${Date.now()}_${file.name}`,
-      parents: [process.env.GOOGLE_DRIVE_FOLDER_ID || '']
-    };
+    
+    const fileName = `${Date.now()}_${file.name}`;
+    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+    const apiKey = process.env.GOOGLE_DRIVE_API_KEY;
 
-    // Buffer를 Readable Stream으로 변환
-    const { Readable } = require('stream');
-    const stream = Readable.from(buffer);
-
-    const media = {
-      mimeType: file.type,
-      body: stream
-    };
-
-    console.log('File metadata:', fileMetadata);
-    console.log('Folder ID:', process.env.GOOGLE_DRIVE_FOLDER_ID);
-
-    const response = await drive.files.create({
-      requestBody: fileMetadata,
-      media: media,
-      fields: 'id,name,webViewLink,size'
+    // 1단계: 업로드 URL 요청
+    const uploadResponse = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=media&key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': file.type,
+        'Content-Length': buffer.length.toString()
+      },
+      body: buffer
     });
-    console.log('Upload response:', response.data);
 
-    if (!response.data.id) {
-      throw new Error('파일 업로드에 실패했습니다');
+    if (!uploadResponse.ok) {
+      const errorText = await uploadResponse.text();
+      console.error('Upload failed:', errorText);
+      throw new Error(`업로드 실패: ${uploadResponse.status}`);
+    }
+
+    const uploadResult = await uploadResponse.json();
+    console.log('Upload result:', uploadResult);
+
+    // 2단계: 파일 메타데이터 업데이트 (폴더에 추가)
+    const updateResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${uploadResult.id}?key=${apiKey}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: fileName,
+        parents: [folderId]
+      })
+    });
+
+    if (!updateResponse.ok) {
+      console.warn('폴더 추가 실패, 하지만 업로드는 성공');
     }
 
     return NextResponse.json({
@@ -100,9 +90,8 @@ export async function POST(request: NextRequest) {
       fileSize: file.size,
       fileType: isImage ? 'image' : 'video',
       uploadTime: new Date().toISOString(),
-      driveFileId: response.data.id,
-      driveFileUrl: response.data.webViewLink,
-      driveFileName: response.data.name
+      driveFileId: uploadResult.id,
+      driveFileUrl: `https://drive.google.com/file/d/${uploadResult.id}/view`
     });
 
   } catch (error) {
@@ -110,20 +99,18 @@ export async function POST(request: NextRequest) {
     
     // 에러 타입 안전하게 처리
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    const errorStack = error instanceof Error ? error.stack : 'No stack trace';
     
     console.error('Error message:', errorMessage);
-    console.error('Error stack:', errorStack);
     
     // 구체적인 에러 메시지 반환
     let userMessage = '업로드 중 오류가 발생했습니다. 다시 시도해주세요.';
     
-    if (errorMessage.includes('insufficient authentication')) {
-      userMessage = 'Google Drive 인증에 실패했습니다. 관리자에게 문의하세요.';
-    } else if (errorMessage.includes('not found')) {
+    if (errorMessage.includes('403')) {
+      userMessage = 'Google Drive API 키 권한이 없습니다. 관리자에게 문의하세요.';
+    } else if (errorMessage.includes('404')) {
       userMessage = 'Google Drive 폴더를 찾을 수 없습니다. 관리자에게 문의하세요.';
-    } else if (errorMessage.includes('permission')) {
-      userMessage = 'Google Drive 권한이 없습니다. 관리자에게 문의하세요.';
+    } else if (errorMessage.includes('401')) {
+      userMessage = 'Google Drive API 키가 유효하지 않습니다. 관리자에게 문의하세요.';
     }
     
     return NextResponse.json(
