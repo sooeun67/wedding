@@ -6,7 +6,7 @@ export const getAuthUrl = () => {
   const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
   
   const scopes = [
-    'https://www.googleapis.com/auth/photoslibrary.appendonly', // 사진 업로드만
+    'https://www.googleapis.com/auth/drive.file', // Google Drive 파일 업로드
     'https://www.googleapis.com/auth/userinfo.profile', // 기본 프로필 정보
     'https://www.googleapis.com/auth/userinfo.email' // 이메일 정보
   ];

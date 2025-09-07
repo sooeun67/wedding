@@ -10,15 +10,62 @@ interface PhotoUploadSectionProps {
 const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Google 로그인 처리
+  const handleGoogleLogin = async () => {
+    try {
+      const response = await fetch('/api/auth/google');
+      const { authUrl } = await response.json();
+      
+      // 새 창에서 Google 로그인
+      const popup = window.open(authUrl, 'google-login', 'width=500,height=600');
+      
+      // 로그인 완료 대기
+      const checkClosed = setInterval(() => {
+        if (popup?.closed) {
+          clearInterval(checkClosed);
+          // 로그인 상태 확인
+          checkAuthStatus();
+        }
+      }, 1000);
+    } catch (error) {
+      console.error('Google 로그인 오류:', error);
+      alert('Google 로그인에 실패했습니다');
+    }
+  };
+
+  // 인증 상태 확인
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch('/api/auth/status');
+      const result = await response.json();
+      
+      if (result.authenticated) {
+        setAccessToken(result.accessToken);
+        setIsAuthenticated(true);
+        alert('Google 로그인이 완료되었습니다!');
+      }
+    } catch (error) {
+      console.error('인증 상태 확인 오류:', error);
+    }
+  };
 
   // 파일 업로드 처리
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // 파일 크기 검증 (50MB - 합리적인 크기)
-    if (file.size > 50 * 1024 * 1024) {
-      alert('파일 크기가 너무 큽니다. 50MB 이하로 업로드해주세요.');
+    // Google 로그인 확인
+    if (!accessToken) {
+      alert('Google 로그인이 필요합니다. 먼저 로그인해주세요.');
+      return;
+    }
+
+    // 파일 크기 검증 (100MB - Google Drive 최대 크기)
+    if (file.size > 100 * 1024 * 1024) {
+      alert('파일 크기가 너무 큽니다. 100MB 이하로 업로드해주세요.');
       return;
     }
 
@@ -37,6 +84,7 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('accessToken', accessToken);
 
       // 업로드 진행률 시뮬레이션
       const progressInterval = setInterval(() => {
@@ -60,8 +108,8 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
       if (response.ok) {
         const result = await response.json();
         
-        // 성공 메시지와 앨범 링크 표시
-        const message = `${result.message}\n\n앨범에서 확인하기: ${result.albumUrl}`;
+        // 성공 메시지와 Google Drive 링크 표시
+        const message = `${result.message}\n\nGoogle Drive에서 확인하기: ${result.driveFileUrl}`;
         alert(message);
         
         // 파일 입력 초기화
@@ -91,28 +139,35 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
           올려주시면 감사하겠습니다
         </UploadDescription>
 
-        <FileInputContainer>
-          <HiddenFileInput
-            type="file"
-            accept="image/*,video/*"
-            onChange={handleFileUpload}
-            disabled={isUploading}
-            id="photo-upload"
-          />
-          <FileInputLabel htmlFor="photo-upload" $isUploading={isUploading}>
-            {isUploading ? (
-              <>
-                <UploadSpinner />
-                업로드 중... {uploadProgress}%
-              </>
-            ) : (
-              <>
-                <UploadIcon>📷</UploadIcon>
-                사진 선택하기
-              </>
-            )}
-          </FileInputLabel>
-        </FileInputContainer>
+        {!isAuthenticated ? (
+          <LoginButton onClick={handleGoogleLogin}>
+            <UploadIcon>🔐</UploadIcon>
+            Google로 로그인하기
+          </LoginButton>
+        ) : (
+          <FileInputContainer>
+            <HiddenFileInput
+              type="file"
+              accept="image/*,video/*"
+              onChange={handleFileUpload}
+              disabled={isUploading}
+              id="photo-upload"
+            />
+            <FileInputLabel htmlFor="photo-upload" $isUploading={isUploading}>
+              {isUploading ? (
+                <>
+                  <UploadSpinner />
+                  업로드 중... {uploadProgress}%
+                </>
+              ) : (
+                <>
+                  <UploadIcon>📷</UploadIcon>
+                  사진 선택하기
+                </>
+              )}
+            </FileInputLabel>
+          </FileInputContainer>
+        )}
 
         {isUploading && (
           <ProgressBar>
@@ -265,6 +320,27 @@ const TipItem = styled.div`
 
   &:last-child {
     margin-bottom: 0;
+  }
+`;
+
+const LoginButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #3367d6;
   }
 `;
 

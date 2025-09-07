@@ -4,17 +4,26 @@ export async function POST(request: NextRequest) {
   try {
     // 환경 변수 확인
     console.log('Environment variables check:');
-    console.log('GOOGLE_DRIVE_API_KEY:', process.env.GOOGLE_DRIVE_API_KEY ? '✅ Set' : '❌ Missing');
+    console.log('NEXT_PUBLIC_GOOGLE_CLIENT_ID:', process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ? '✅ Set' : '❌ Missing');
+    console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET ? '✅ Set' : '❌ Missing');
     console.log('GOOGLE_DRIVE_FOLDER_ID:', process.env.GOOGLE_DRIVE_FOLDER_ID ? '✅ Set' : '❌ Missing');
 
     // FormData에서 파일 가져오기
     const formData = await request.formData();
     const file = formData.get('file') as File;
+    const accessToken = formData.get('accessToken') as string;
     
     if (!file) {
       return NextResponse.json(
         { error: '파일이 필요합니다' },
         { status: 400 }
+      );
+    }
+
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: 'Google 로그인이 필요합니다' },
+        { status: 401 }
       );
     }
 
@@ -46,12 +55,12 @@ export async function POST(request: NextRequest) {
     
     const fileName = `${Date.now()}_${file.name}`;
     const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
-    const apiKey = process.env.GOOGLE_DRIVE_API_KEY;
 
     // 1단계: 업로드 URL 요청
-    const uploadResponse = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=media&key=${apiKey}`, {
+    const uploadResponse = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=media`, {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': file.type,
         'Content-Length': buffer.length.toString()
       },
@@ -68,9 +77,10 @@ export async function POST(request: NextRequest) {
     console.log('Upload result:', uploadResult);
 
     // 2단계: 파일 메타데이터 업데이트 (폴더에 추가)
-    const updateResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${uploadResult.id}?key=${apiKey}`, {
+    const updateResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${uploadResult.id}`, {
       method: 'PATCH',
       headers: {
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -105,12 +115,12 @@ export async function POST(request: NextRequest) {
     // 구체적인 에러 메시지 반환
     let userMessage = '업로드 중 오류가 발생했습니다. 다시 시도해주세요.';
     
-    if (errorMessage.includes('403')) {
-      userMessage = 'Google Drive API 키 권한이 없습니다. 관리자에게 문의하세요.';
+    if (errorMessage.includes('401')) {
+      userMessage = 'Google 로그인이 필요합니다. 다시 로그인해주세요.';
+    } else if (errorMessage.includes('403')) {
+      userMessage = 'Google Drive 권한이 없습니다. 관리자에게 문의하세요.';
     } else if (errorMessage.includes('404')) {
       userMessage = 'Google Drive 폴더를 찾을 수 없습니다. 관리자에게 문의하세요.';
-    } else if (errorMessage.includes('401')) {
-      userMessage = 'Google Drive API 키가 유효하지 않습니다. 관리자에게 문의하세요.';
     }
     
     return NextResponse.json(
