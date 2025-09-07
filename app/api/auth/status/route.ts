@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserInfo } from '../../../src/lib/google-auth';
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,8 +14,28 @@ export async function GET(request: NextRequest) {
 
     const tokens = JSON.parse(tokenCookie.value);
     
-    // 토큰이 유효한지 확인하고 사용자 정보 가져오기
-    const userInfo = await getUserInfo(tokens);
+    if (!tokens.access_token) {
+      return NextResponse.json({
+        authenticated: false,
+        userInfo: null
+      });
+    }
+    
+    // 사용자 정보 가져오기
+    const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: {
+        'Authorization': `Bearer ${tokens.access_token}`
+      }
+    });
+    
+    if (!userInfoResponse.ok) {
+      return NextResponse.json({
+        authenticated: false,
+        userInfo: null
+      });
+    }
+    
+    const userInfo = await userInfoResponse.json();
     
     return NextResponse.json({
       authenticated: true,

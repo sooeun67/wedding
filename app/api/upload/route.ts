@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { uploadToGooglePhotos } from '../../../src/lib/google-photos';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +13,13 @@ export async function POST(request: NextRequest) {
     }
 
     const tokens = JSON.parse(tokenCookie.value);
+    
+    if (!tokens.access_token) {
+      return NextResponse.json(
+        { error: '유효하지 않은 토큰입니다' },
+        { status: 401 }
+      );
+    }
     
     // FormData에서 파일 가져오기
     const formData = await request.formData();
@@ -43,7 +49,48 @@ export async function POST(request: NextRequest) {
     }
 
     // Google Photos에 업로드
-    const result = await uploadToGooglePhotos(file, tokens);
+    const arrayBuffer = await file.arrayBuffer();
+    
+    // 1단계: 업로드 URL 요청
+    const uploadResponse = await fetch('https://photoslibrary.googleapis.com/v1/uploads', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${tokens.access_token}`,
+        'Content-Type': 'application/octet-stream',
+        'X-Goog-Upload-Protocol': 'raw',
+        'X-Goog-Upload-File-Name': file.name
+      },
+      body: arrayBuffer
+    });
+    
+    if (!uploadResponse.ok) {
+      throw new Error('업로드 URL 요청에 실패했습니다');
+    }
+    
+    const uploadToken = await uploadResponse.text();
+    
+    // 2단계: 미디어 아이템 생성
+    const createResponse = await fetch('https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${tokens.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        newMediaItems: [{
+          description: `결혼식 사진 - ${new Date().toLocaleDateString()}`,
+          simpleMediaItem: {
+            uploadToken: uploadToken
+          }
+        }]
+      })
+    });
+    
+    if (!createResponse.ok) {
+      throw new Error('미디어 아이템 생성에 실패했습니다');
+    }
+    
+    const result = await createResponse.json();
     
     return NextResponse.json({
       success: true,

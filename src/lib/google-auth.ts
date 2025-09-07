@@ -1,49 +1,71 @@
-import { google } from 'googleapis';
-
-// OAuth 2.0 클라이언트 설정
-export const oauth2Client = new google.auth.OAuth2(
-  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI
-);
+// 클라이언트 사이드에서만 사용할 수 있는 Google OAuth 유틸리티
 
 // Google OAuth 인증 URL 생성
 export const getAuthUrl = () => {
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
+  
   const scopes = [
     'https://www.googleapis.com/auth/photoslibrary.appendonly', // 사진 업로드만
     'https://www.googleapis.com/auth/userinfo.profile', // 기본 프로필 정보
     'https://www.googleapis.com/auth/userinfo.email' // 이메일 정보
   ];
 
-  return oauth2Client.generateAuthUrl({
+  const params = new URLSearchParams({
+    client_id: clientId || '',
+    redirect_uri: redirectUri || '',
+    response_type: 'code',
+    scope: scopes.join(' '),
     access_type: 'offline',
-    scope: scopes,
-    prompt: 'consent' // 사용자에게 권한 요청
+    prompt: 'consent'
   });
+
+  return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 };
 
-// 토큰으로 사용자 정보 가져오기
-export const getUserInfo = async (tokens: any) => {
-  oauth2Client.setCredentials(tokens);
-  
-  const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });
-  const userInfo = await oauth2.userinfo.get();
-  
-  return userInfo.data;
+// 토큰으로 사용자 정보 가져오기 (클라이언트 사이드)
+export const getUserInfo = async (accessToken: string) => {
+  try {
+    const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('사용자 정보를 가져올 수 없습니다');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('사용자 정보 가져오기 오류:', error);
+    throw error;
+  }
 };
 
-// Google Photos API 클라이언트 생성
-export const getPhotosClient = (tokens: any) => {
-  oauth2Client.setCredentials(tokens);
-  return google.photoslibrary({ version: 'v1', auth: oauth2Client });
-};
-
-// 토큰 갱신
+// 토큰 갱신 (클라이언트 사이드)
 export const refreshToken = async (refreshToken: string) => {
-  oauth2Client.setCredentials({
-    refresh_token: refreshToken
-  });
-  
-  const { credentials } = await oauth2Client.refreshAccessToken();
-  return credentials;
+  try {
+    const response = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
+        client_secret: process.env.GOOGLE_CLIENT_SECRET || '',
+        refresh_token: refreshToken,
+        grant_type: 'refresh_token'
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error('토큰 갱신에 실패했습니다');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('토큰 갱신 오류:', error);
+    throw error;
+  }
 };

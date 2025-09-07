@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { oauth2Client } from '../../../src/lib/google-auth';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -15,12 +14,29 @@ export async function GET(request: NextRequest) {
   if (code) {
     try {
       // 인증 코드로 토큰 교환
-      const { tokens } = await oauth2Client.getToken(code);
-      
-      // 토큰을 쿠키에 저장 (보안상 암호화 권장)
-      const response = NextResponse.redirect(new URL('/?auth=success', request.url));
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
+          client_secret: process.env.GOOGLE_CLIENT_SECRET || '',
+          code: code,
+          grant_type: 'authorization_code',
+          redirect_uri: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || ''
+        })
+      });
+
+      if (!tokenResponse.ok) {
+        throw new Error('토큰 교환에 실패했습니다');
+      }
+
+      const tokens = await tokenResponse.json();
       
       // 토큰을 쿠키에 저장
+      const response = NextResponse.redirect(new URL('/?auth=success', request.url));
+      
       response.cookies.set('google_tokens', JSON.stringify(tokens), {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
