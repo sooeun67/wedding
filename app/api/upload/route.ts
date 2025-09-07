@@ -103,22 +103,27 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('업로드 오류 상세:', error);
-    console.error('Error message:', error.message);
-    console.error('Error stack:', error.stack);
+    
+    // 에러 타입 안전하게 처리
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : 'No stack trace';
+    
+    console.error('Error message:', errorMessage);
+    console.error('Error stack:', errorStack);
     
     // 구체적인 에러 메시지 반환
-    let errorMessage = '업로드 중 오류가 발생했습니다. 다시 시도해주세요.';
+    let userMessage = '업로드 중 오류가 발생했습니다. 다시 시도해주세요.';
     
-    if (error.message?.includes('insufficient authentication')) {
-      errorMessage = 'Google Drive 인증에 실패했습니다. 관리자에게 문의하세요.';
-    } else if (error.message?.includes('not found')) {
-      errorMessage = 'Google Drive 폴더를 찾을 수 없습니다. 관리자에게 문의하세요.';
-    } else if (error.message?.includes('permission')) {
-      errorMessage = 'Google Drive 권한이 없습니다. 관리자에게 문의하세요.';
+    if (errorMessage.includes('insufficient authentication')) {
+      userMessage = 'Google Drive 인증에 실패했습니다. 관리자에게 문의하세요.';
+    } else if (errorMessage.includes('not found')) {
+      userMessage = 'Google Drive 폴더를 찾을 수 없습니다. 관리자에게 문의하세요.';
+    } else if (errorMessage.includes('permission')) {
+      userMessage = 'Google Drive 권한이 없습니다. 관리자에게 문의하세요.';
     }
     
     return NextResponse.json(
-      { error: errorMessage },
+      { error: userMessage },
       { status: 500 }
     );
   }
