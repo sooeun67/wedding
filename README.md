@@ -132,6 +132,7 @@ npm run dev
 
 ## 🔐 환경 변수 설정
 
+### 로컬 개발용 (.env.local)
 `.env.local` 파일을 생성하고 다음 변수들을 설정하세요:
 
 ```bash
@@ -149,8 +150,109 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
 # Slack Webhook (RSVP 알림용, 선택사항)
 NEXT_PUBLIC_SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 
+# Google OAuth (사진 업로드용, 선택사항)
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+NEXT_PUBLIC_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+
 # 사이트 URL (배포 후)
 NEXT_PUBLIC_SITE_URL=https://your-wedding-site.com
+```
+
+### Vercel 배포용 환경 변수 설정
+
+#### 1. Vercel 대시보드 접속
+1. [Vercel 대시보드](https://vercel.com/dashboard) 접속
+2. 프로젝트 선택 → **"Settings"** 탭 클릭
+3. 왼쪽 메뉴에서 **"Environment Variables"** 클릭
+
+#### 2. 환경 변수 추가
+각각의 환경 변수를 하나씩 추가합니다:
+
+**네이버 지도 API:**
+```
+Name: NEXT_PUBLIC_NAVER_MAP_CLIENT_ID
+Value: [네이버에서 받은 클라이언트 ID]
+Environment: Production, Preview, Development (모두 체크)
+```
+
+**Firebase 설정:**
+```
+Name: NEXT_PUBLIC_FIREBASE_API_KEY
+Value: [Firebase API 키]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+Value: [Firebase Auth 도메인]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+Value: [Firebase 프로젝트 ID]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+Value: [Firebase 스토리지 버킷]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+Value: [Firebase 메시징 발신자 ID]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: NEXT_PUBLIC_FIREBASE_APP_ID
+Value: [Firebase 앱 ID]
+Environment: Production, Preview, Development (모두 체크)
+```
+
+**Slack Webhook:**
+```
+Name: NEXT_PUBLIC_SLACK_WEBHOOK_URL
+Value: [Slack 웹훅 URL]
+Environment: Production, Preview, Development (모두 체크)
+```
+
+**Google OAuth (사진 업로드용):**
+```
+Name: NEXT_PUBLIC_GOOGLE_CLIENT_ID
+Value: [Google 클라이언트 ID]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: GOOGLE_CLIENT_SECRET
+Value: [Google 클라이언트 시크릿]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: NEXT_PUBLIC_GOOGLE_REDIRECT_URI
+Value: https://your-domain.vercel.app/auth/google/callback
+Environment: Production (Production만 체크)
+```
+
+**사이트 URL:**
+```
+Name: NEXT_PUBLIC_SITE_URL
+Value: https://your-domain.vercel.app
+Environment: Production (Production만 체크)
+```
+
+#### 3. 환경 변수 저장 및 재배포
+1. 모든 환경 변수 추가 후 **"Save"** 클릭
+2. **"Deployments"** 탭으로 이동
+3. **"Redeploy"** 버튼 클릭하여 환경 변수 적용
+
+#### 4. Vercel CLI로 환경 변수 설정 (선택사항)
+```bash
+# Vercel CLI 설치
+npm install -g vercel
+
+# 로그인
+vercel login
+
+# 환경 변수 추가
+vercel env add NEXT_PUBLIC_NAVER_MAP_CLIENT_ID
+vercel env add NEXT_PUBLIC_FIREBASE_API_KEY
+vercel env add GOOGLE_CLIENT_SECRET
+# ... 기타 환경 변수들
+
+# 프로덕션 배포
+vercel --prod
 ```
 
 ## 🔥 Firebase 방명록 설정
@@ -210,6 +312,73 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
+```
+
+## 📸 Google OAuth 설정 (사진 업로드용)
+
+### 1. Google Cloud Console 프로젝트 생성
+1. [Google Cloud Console](https://console.cloud.google.com/) 접속
+2. Google 계정으로 로그인
+3. "프로젝트 선택" 또는 "새 프로젝트" 클릭
+4. 프로젝트 이름: "Wedding Photo Upload" (또는 원하는 이름)
+
+### 2. 필요한 API 활성화
+1. 왼쪽 메뉴에서 "API 및 서비스" > "라이브러리" 클릭
+2. "Google Photos Library API" 검색 후 "사용 설정" 클릭
+3. "Google Drive API" 검색 후 "사용 설정" 클릭 (선택사항)
+
+### 3. OAuth 2.0 클라이언트 ID 생성
+1. "API 및 서비스" > "사용자 인증 정보" 클릭
+2. "사용자 인증 정보 만들기" > "OAuth 2.0 클라이언트 ID" 클릭
+3. 애플리케이션 유형: **"웹 애플리케이션"** 선택
+4. 이름: "Wedding Invitation App"
+5. 승인된 JavaScript 원본 추가:
+   ```
+   http://localhost:3000
+   https://your-domain.vercel.app
+   ```
+6. 승인된 리디렉션 URI 추가:
+   ```
+   http://localhost:3000/auth/google/callback
+   https://your-domain.vercel.app/auth/google/callback
+   ```
+7. "만들기" 클릭
+
+### 4. Google Photos에서 앨범 준비
+1. [Google Photos](https://photos.google.com/) 접속
+2. 왼쪽 메뉴에서 "앨범" 클릭
+3. "앨범 만들기" 클릭
+4. 앨범 이름: "결혼식 사진" (또는 원하는 이름)
+5. "만들기" 클릭
+
+### 5. 환경 변수 설정
+생성된 클라이언트 ID와 시크릿을 환경 변수에 추가:
+
+**로컬 개발용 (.env.local):**
+```bash
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+NEXT_PUBLIC_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+```
+
+**Vercel 배포용:**
+```
+Name: NEXT_PUBLIC_GOOGLE_CLIENT_ID
+Value: [Google 클라이언트 ID]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: GOOGLE_CLIENT_SECRET
+Value: [Google 클라이언트 시크릿]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: NEXT_PUBLIC_GOOGLE_REDIRECT_URI
+Value: https://your-domain.vercel.app/auth/google/callback
+Environment: Production (Production만 체크)
+```
+
+### 6. 필요한 패키지 설치
+```bash
+npm install googleapis google-auth-library
 ```
 
 ## 🗺️ 네이버 지도 API 설정

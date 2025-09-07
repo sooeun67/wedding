@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { weddingConfig } from '../../config/wedding-config';
+import PhotoUpload from '../PhotoUpload';
 
 interface GallerySectionProps {
   bgColor?: 'white' | 'beige';
@@ -298,9 +299,30 @@ const GallerySection = ({ bgColor = 'white' }: GallerySectionProps) => {
     );
   }
 
+  // 업로드 성공 핸들러
+  const handleUploadSuccess = (result: any) => {
+    console.log('업로드 성공:', result);
+    // 갤러리 새로고침 (선택사항)
+    // window.location.reload();
+  };
+
+  // 업로드 오류 핸들러
+  const handleUploadError = (error: string) => {
+    console.error('업로드 오류:', error);
+    alert(`업로드 오류: ${error}`);
+  };
+
   return (
     <GallerySectionContainer $bgColor={bgColor}>
       <SectionTitle>갤러리</SectionTitle>
+
+      {/* 사진 업로드 섹션 */}
+      <PhotoUploadSection>
+        <PhotoUpload 
+          onUploadSuccess={handleUploadSuccess}
+          onUploadError={handleUploadError}
+        />
+      </PhotoUploadSection>
 
       {galleryLayout === 'grid' ? (
         <GalleryGridContainer>
@@ -630,6 +652,13 @@ const ErrorContainer = styled.div`
   max-width: 36rem;
   margin: 0 auto;
   color: #c62828;
+`;
+
+const PhotoUploadSection = styled.div`
+  margin-bottom: 2rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 export default GallerySection;
