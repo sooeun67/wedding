@@ -16,15 +16,18 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // 파일 크기 검증 (10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      alert('파일 크기는 10MB를 초과할 수 없습니다');
+    // 파일 크기 검증 (50MB - 합리적인 크기)
+    if (file.size > 50 * 1024 * 1024) {
+      alert('파일 크기가 너무 큽니다. 50MB 이하로 업로드해주세요.');
       return;
     }
 
-    // 파일 타입 검증
-    if (!file.type.startsWith('image/')) {
-      alert('이미지 파일만 업로드 가능합니다');
+    // 파일 타입 검증 (이미지 + 동영상)
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+    
+    if (!isImage && !isVideo) {
+      alert('사진 또는 동영상 파일만 업로드 가능합니다');
       return;
     }
 
@@ -84,14 +87,14 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
         <UploadIcon>📸</UploadIcon>
         <UploadTitle>결혼식 사진 공유</UploadTitle>
         <UploadDescription>
-          결혼식 사진을 구글 포토 앨범에<br />
-          업로드하여 공유해주세요
+          결혼식 당일 이쁜 사진들을<br />
+          올려주시면 감사하겠습니다
         </UploadDescription>
 
         <FileInputContainer>
           <HiddenFileInput
             type="file"
-            accept="image/*"
+            accept="image/*,video/*"
             onChange={handleFileUpload}
             disabled={isUploading}
             id="photo-upload"
@@ -118,9 +121,9 @@ const PhotoUploadSection = ({ bgColor = 'white' }: PhotoUploadSectionProps) => {
         )}
 
         <UploadTips>
-          <TipItem>• 이미지 파일만 업로드 가능합니다</TipItem>
-          <TipItem>• 파일 크기는 10MB 이하로 제한됩니다</TipItem>
-          <TipItem>• 업로드된 사진은 구글 포토 앨범에 저장됩니다</TipItem>
+          <TipItem>• 사진과 동영상 모두 업로드 가능합니다</TipItem>
+          <TipItem>• 업로드된 사진은 안전하게 보관됩니다</TipItem>
+          <TipItem>• 결혼식 추억을 함께 나눠주세요</TipItem>
         </UploadTips>
       </UploadCard>
     </PhotoUploadSectionContainer>

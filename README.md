@@ -150,10 +150,13 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
 # Slack Webhook (RSVP 알림용, 선택사항)
 NEXT_PUBLIC_SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 
-# Google OAuth (사진 업로드용, 선택사항)
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id_here
-GOOGLE_CLIENT_SECRET=your_google_client_secret_here
-NEXT_PUBLIC_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+# Google Drive API (사진 업로드용, 선택사항)
+GOOGLE_PROJECT_ID=your-project-id
+GOOGLE_PRIVATE_KEY_ID=your-private-key-id
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nyour-private-key\n-----END PRIVATE KEY-----\n"
+GOOGLE_CLIENT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_DRIVE_FOLDER_ID=your-google-drive-folder-id
 
 # 사이트 URL (배포 후)
 NEXT_PUBLIC_SITE_URL=https://your-wedding-site.com
@@ -254,6 +257,89 @@ vercel env add GOOGLE_CLIENT_SECRET
 # 프로덕션 배포
 vercel --prod
 ```
+
+## 📁 Google Drive API 설정 (사진 업로드용)
+
+### 1. Google Cloud Console 설정
+
+1. **Google Cloud Console 접속**
+   - [Google Cloud Console](https://console.cloud.google.com/) 접속
+   - 기존 프로젝트 선택 또는 새 프로젝트 생성
+
+2. **Google Drive API 활성화**
+   - 좌측 메뉴 → "API 및 서비스" → "라이브러리"
+   - "Google Drive API" 검색 후 "사용 설정" 클릭
+
+3. **서비스 계정 생성**
+   - 좌측 메뉴 → "IAM 및 관리자" → "서비스 계정"
+   - "서비스 계정 만들기" 클릭
+   - 서비스 계정 이름: `wedding-photo-uploader`
+   - 역할: "편집자" 선택
+   - "키 만들기" → "새 키 만들기" → "JSON" 선택
+   - JSON 파일 다운로드 (안전한 곳에 보관)
+
+### 2. Google Drive 폴더 설정
+
+1. **Google Drive에서 폴더 생성**
+   - [Google Drive](https://drive.google.com/) 접속
+   - "새로 만들기" → "폴더" → "결혼식 사진" 폴더 생성
+
+2. **폴더 공유 설정**
+   - 생성한 폴더 우클릭 → "공유"
+   - 서비스 계정 이메일 주소 입력 (JSON 파일의 `client_email` 값)
+   - 권한: "편집자" 선택
+   - "보내기" 클릭
+
+3. **폴더 ID 확인**
+   - 폴더 URL에서 ID 추출: `https://drive.google.com/drive/folders/[FOLDER_ID]`
+   - 이 ID를 `GOOGLE_DRIVE_FOLDER_ID` 환경 변수에 설정
+
+### 3. 환경 변수 설정
+
+**로컬 개발용 (.env.local):**
+```bash
+# Google Drive API 설정
+GOOGLE_PROJECT_ID=your-project-id
+GOOGLE_PRIVATE_KEY_ID=your-private-key-id
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nyour-private-key\n-----END PRIVATE KEY-----\n"
+GOOGLE_CLIENT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_DRIVE_FOLDER_ID=your-google-drive-folder-id
+```
+
+**Vercel 배포용:**
+```
+Name: GOOGLE_PROJECT_ID
+Value: [프로젝트 ID]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: GOOGLE_PRIVATE_KEY_ID
+Value: [프라이빗 키 ID]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: GOOGLE_PRIVATE_KEY
+Value: [프라이빗 키 (전체 내용)]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: GOOGLE_CLIENT_EMAIL
+Value: [서비스 계정 이메일]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: GOOGLE_CLIENT_ID
+Value: [클라이언트 ID]
+Environment: Production, Preview, Development (모두 체크)
+
+Name: GOOGLE_DRIVE_FOLDER_ID
+Value: [Google Drive 폴더 ID]
+Environment: Production, Preview, Development (모두 체크)
+```
+
+### 4. 테스트
+
+1. 개발 서버 실행: `npm run dev`
+2. 브라우저에서 `http://localhost:3000` 접속
+3. 맨 아래 "사진 공유" 섹션에서 사진 업로드 테스트
+4. Google Drive 폴더에서 업로드된 사진 확인
 
 ## 🔥 Firebase 방명록 설정
 

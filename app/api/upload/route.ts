@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { weddingConfig } from '@/src/config/wedding-config';
+import { google } from 'googleapis';
+import { GoogleAuth } from 'google-auth-library';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,97 +15,86 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 파일 크기 제한 (10MB)
-    if (file.size > 10 * 1024 * 1024) {
+    // 파일 크기 제한 (100MB - Google Drive 최대 크기)
+    if (file.size > 100 * 1024 * 1024) {
       return NextResponse.json(
-        { error: '파일 크기는 10MB를 초과할 수 없습니다' },
+        { error: '파일 크기가 너무 큽니다. 100MB 이하로 업로드해주세요.' },
         { status: 400 }
       );
     }
 
-    // 파일 타입 검증
-    if (!file.type.startsWith('image/')) {
+    // 파일 타입 검증 (이미지 + 동영상)
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+    
+    if (!isImage && !isVideo) {
       return NextResponse.json(
-        { error: '이미지 파일만 업로드 가능합니다' },
+        { error: '사진 또는 동영상 파일만 업로드 가능합니다' },
         { status: 400 }
       );
     }
 
-    // Google Photos API를 사용한 실제 업로드
+    // Google Drive API 인증 설정
+    const auth = new GoogleAuth({
+      credentials: {
+        type: 'service_account',
+        project_id: process.env.GOOGLE_PROJECT_ID,
+        private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+        token_uri: 'https://oauth2.googleapis.com/token',
+        auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+        client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.GOOGLE_CLIENT_EMAIL}`
+      },
+      scopes: ['https://www.googleapis.com/auth/drive.file']
+    });
+
+    // Google Drive 클라이언트 생성
+    const drive = google.drive({ version: 'v3', auth });
+
+    // 파일을 ArrayBuffer로 변환
     const arrayBuffer = await file.arrayBuffer();
-    
-    // 1단계: 업로드 URL 요청
-    const uploadResponse = await fetch('https://photoslibrary.googleapis.com/v1/uploads', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/octet-stream',
-        'X-Goog-Upload-Protocol': 'raw',
-        'X-Goog-Upload-File-Name': file.name
-      },
-      body: arrayBuffer
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Google Drive에 파일 업로드
+    const fileMetadata = {
+      name: `${Date.now()}_${file.name}`,
+      parents: [process.env.GOOGLE_DRIVE_FOLDER_ID || '']
+    };
+
+    const media = {
+      mimeType: file.type,
+      body: buffer
+    };
+
+    const response = await drive.files.create({
+      requestBody: fileMetadata,
+      media: media,
+      fields: 'id,name,webViewLink,size'
     });
-    
-    if (!uploadResponse.ok) {
-      throw new Error('업로드 URL 요청에 실패했습니다');
+
+    if (!response.data.id) {
+      throw new Error('파일 업로드에 실패했습니다');
     }
-    
-    const uploadToken = await uploadResponse.text();
-    
-    // 2단계: 미디어 아이템 생성
-    const createResponse = await fetch('https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        newMediaItems: [{
-          description: `결혼식 사진 - ${new Date().toLocaleDateString()}`,
-          simpleMediaItem: {
-            uploadToken: uploadToken
-          }
-        }]
-      })
-    });
-    
-    if (!createResponse.ok) {
-      throw new Error('미디어 아이템 생성에 실패했습니다');
-    }
-    
-    const result = await createResponse.json();
-    
-    // 3단계: 앨범에 추가 (선택사항)
-    if (result.newMediaItemResults && result.newMediaItemResults[0]?.mediaItem?.id) {
-      const mediaItemId = result.newMediaItemResults[0].mediaItem.id;
-      
-      try {
-        await fetch(`https://photoslibrary.googleapis.com/v1/albums/${weddingConfig.googlePhotos.albumId}:batchAddMediaItems`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            mediaItemIds: [mediaItemId]
-          })
-        });
-      } catch (albumError) {
-        console.warn('앨범에 추가 실패 (업로드는 성공):', albumError);
-      }
-    }
-    
+
     return NextResponse.json({
       success: true,
-      message: `사진이 성공적으로 구글 포토 앨범 "${weddingConfig.googlePhotos.albumName}"에 업로드되었습니다!`,
+      message: '사진이 성공적으로 업로드되었습니다! 감사합니다.',
       fileName: file.name,
       fileSize: file.size,
+      fileType: isImage ? 'image' : 'video',
       uploadTime: new Date().toISOString(),
-      albumId: weddingConfig.googlePhotos.albumId,
-      albumUrl: `https://photos.google.com/album/${weddingConfig.googlePhotos.albumId}`
+      driveFileId: response.data.id,
+      driveFileUrl: response.data.webViewLink,
+      driveFileName: response.data.name
     });
 
   } catch (error) {
     console.error('업로드 오류:', error);
     return NextResponse.json(
-      { error: '업로드 중 오류가 발생했습니다. 구글 포토 API 키가 필요할 수 있습니다.' },
+      { error: '업로드 중 오류가 발생했습니다. 다시 시도해주세요.' },
       { status: 500 }
     );
   }
