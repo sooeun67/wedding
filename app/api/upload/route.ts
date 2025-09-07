@@ -70,9 +70,13 @@ export async function POST(request: NextRequest) {
       parents: [process.env.GOOGLE_DRIVE_FOLDER_ID || '']
     };
 
+    // Buffer를 Readable Stream으로 변환
+    const { Readable } = require('stream');
+    const stream = Readable.from(buffer);
+
     const media = {
       mimeType: file.type,
-      body: buffer
+      body: stream
     };
 
     console.log('File metadata:', fileMetadata);
