@@ -1,0 +1,7 @@
+[33mcommit e86ec5ddfd0ec55738b845cacb3fd85baf205356[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: ekc0106 <ekc0106@naver.com>
+Date:   Sun Sep 14 16:23:21 2025 +0900
+
+    사진추가
+
+src/config/wedding-config.ts
