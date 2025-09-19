@@ -25,7 +25,6 @@ const CouplePhotosSection = dynamic(() => import('../src/components/sections/Cou
 const VideoSection = dynamic(() => import('../src/components/sections/VideoSection'));
 const RsvpSection = dynamic(() => import('../src/components/sections/RsvpSection'));
 const AccountSection = dynamic(() => import('../src/components/sections/AccountSection'));
-const NoFlowersSection = dynamic(() => import('../src/components/sections/NoFlowersSection'));
 const GuestbookSection = dynamic(() => import('../src/components/sections/GuestbookSection'));
 const Footer = dynamic(() => import('../src/components/sections/Footer'));
 
@@ -64,7 +63,6 @@ export default function Home() {
       sections.push('gallery-bottom'); // GallerySection (bottom)
     }
     
-    sections.push('no-flowers'); // NoFlowersSection
     sections.push('guestbook'); // GuestbookSection
     
     // 각 섹션에 색상 인덱스 할당 (0부터 시작하여 번갈아가며)
@@ -88,7 +86,6 @@ export default function Home() {
       {showRsvp && <RsvpSection bgColor={sectionColorMap['rsvp']} />}
       <AccountSection bgColor={sectionColorMap['account']} />
       {galleryPosition === 'bottom' && <GallerySection bgColor={sectionColorMap['gallery-bottom']} />}
-      <NoFlowersSection bgColor={sectionColorMap['no-flowers']} />
         <GuestbookSection bgColor={sectionColorMap['guestbook']} />
         <Footer />
     </main>
