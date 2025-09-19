@@ -2,27 +2,27 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-// 이미지 최적화 설정
+// 이미지 최적화 설정 (고화질 버전)
 const OPTIMIZATION_SETTINGS = {
-  // 메인 이미지 (더 높은 품질 유지)
+  // 메인 이미지 (최고 품질 유지)
   main: {
-    quality: 80,
-    maxWidth: 1080,
-    maxHeight: 1920,
+    quality: 92,
+    maxWidth: 1200,
+    maxHeight: 2400,
     format: 'jpeg'
   },
-  // 갤러리 이미지 (웹 최적화)
+  // 갤러리 이미지 (고화질 웹 최적화)
   gallery: {
-    quality: 75,
-    maxWidth: 800,
-    maxHeight: 800,
+    quality: 88,
+    maxWidth: 1200,
+    maxHeight: 1200,
     format: 'jpeg'
   },
-  // 썸네일 이미지 (더 작은 크기)
+  // 썸네일 이미지 (소셜미디어 고화질)
   thumbnail: {
-    quality: 70,
-    maxWidth: 400,
-    maxHeight: 400,
+    quality: 85,
+    maxWidth: 1200,
+    maxHeight: 630,
     format: 'jpeg'
   }
 };
