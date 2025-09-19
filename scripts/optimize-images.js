@@ -11,11 +11,11 @@ const OPTIMIZATION_SETTINGS = {
     maxHeight: 2880,
     format: 'jpeg'
   },
-  // 갤러리 이미지 (고화질 웹 최적화)
+  // 갤러리 이미지 (모바일 고해상도 최적화)
   gallery: {
-    quality: 88,
-    maxWidth: 1200,
-    maxHeight: 1200,
+    quality: 92,
+    maxWidth: 1600,
+    maxHeight: 1600,
     format: 'jpeg'
   },
   // 썸네일 이미지 (소셜미디어 고화질)
