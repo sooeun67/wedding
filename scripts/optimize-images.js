@@ -6,9 +6,9 @@ const path = require('path');
 const OPTIMIZATION_SETTINGS = {
   // 메인 이미지 (최고 품질 유지)
   main: {
-    quality: 92,
-    maxWidth: 1200,
-    maxHeight: 2400,
+    quality: 95,
+    maxWidth: 1440,
+    maxHeight: 2880,
     format: 'jpeg'
   },
   // 갤러리 이미지 (고화질 웹 최적화)
