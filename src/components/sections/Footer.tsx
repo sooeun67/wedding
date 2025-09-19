@@ -17,10 +17,10 @@ const Footer = () => {
     <FooterContainer>
       {/* WeddingInvitation-Footer-NonCommercial DO NOT CHANGE*/}
       <FooterContent>
-        <Copyright>© {currentYear} Kyucheol Eom</Copyright>
+        <Copyright>© {currentYear} Sooeun Oh</Copyright>
         <Credits>Made with ❤️</Credits>
         <GithubLink
-          href="https://github.com/ekc0106/ekckyj-wedding"
+          href="https://github.com/sooeun67/wedding"
           target="_blank"
           rel="noopener noreferrer"
         >

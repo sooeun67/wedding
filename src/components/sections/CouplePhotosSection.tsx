@@ -19,7 +19,10 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
               alt="신랑 어릴 때 사진"
               fill
               sizes="180px"
-              style={{ objectFit: 'cover' }}
+              style={{ 
+                objectFit: 'cover',
+                objectPosition: '50% 35%'
+              }}
               draggable={false}
               onContextMenu={(e) => e.preventDefault()}
               onDragStart={(e) => e.preventDefault()}
@@ -27,7 +30,7 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
           </CircularImageContainer>
           <NameContainer>
             <RoleText $isGroom={true}>신랑</RoleText>
-            <NameText>엄규철</NameText>
+            <NameText>남석윤</NameText>
           </NameContainer>
         </PhotoWrapper>
 
@@ -42,7 +45,10 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
               alt="신부 어릴 때 사진"
               fill
               sizes="180px"
-              style={{ objectFit: 'cover' }}
+              style={{ 
+                objectFit: 'cover',
+                objectPosition: '50% 35%'
+              }}
               draggable={false}
               onContextMenu={(e) => e.preventDefault()}
               onDragStart={(e) => e.preventDefault()}
@@ -50,7 +56,7 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
           </CircularImageContainer>
           <NameContainer>
             <RoleText $isGroom={false}>신부</RoleText>
-            <NameText>김유진</NameText>
+            <NameText>오수은</NameText>
           </NameContainer>
         </PhotoWrapper>
       </PhotosContainer>
