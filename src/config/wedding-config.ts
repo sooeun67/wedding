@@ -127,8 +127,8 @@ export const weddingConfig = {
   // 계좌번호
   account: {
     groom: {
-      bank: "은행명",
-      number: "계좌번호",
+      bank: "신한은행",
+      number: "110-335-345210",
       holder: "남석윤",
     },
     bride: {
