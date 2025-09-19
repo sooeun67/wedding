@@ -61,10 +61,6 @@ const VideoSection = ({ bgColor = 'white' }: VideoSectionProps) => {
             />
           </VideoContainer>
         </VideoWrapper>
-        
-        <VideoCaption>
-            그리고 2026.01.24 ~ 💕
-        </VideoCaption>
       </VideoContent>
     </VideoSectionContainer>
   );
@@ -169,17 +165,6 @@ const LoadingText = styled.p`
   color: var(--text-medium);
   font-size: 1rem;
   margin: 0;
-`;
-
-const VideoCaption = styled.p`
-  font-size: 1rem;
-  color: var(--text-light);
-  font-style: italic;
-  margin: 0;
-  
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
 `;
 
 export default VideoSection;
