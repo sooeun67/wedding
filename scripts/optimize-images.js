@@ -2,27 +2,27 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-// 이미지 최적화 설정 (고화질 버전)
+// 이미지 최적화 설정 (전체 고품질 버전)
 const OPTIMIZATION_SETTINGS = {
   // 메인 이미지 (최고 품질 유지)
   main: {
     quality: 95,
-    maxWidth: 1440,
-    maxHeight: 2880,
+    maxWidth: 2400,
+    maxHeight: 3600,
     format: 'jpeg'
   },
-  // 갤러리 이미지 (모바일 고해상도 최적화)
+  // 갤러리 이미지 (고품질 모바일 최적화)
   gallery: {
-    quality: 92,
-    maxWidth: 1600,
-    maxHeight: 1600,
+    quality: 95,
+    maxWidth: 2400,
+    maxHeight: 2400,
     format: 'jpeg'
   },
   // 썸네일 이미지 (소셜미디어 고화질)
   thumbnail: {
-    quality: 85,
-    maxWidth: 1200,
-    maxHeight: 630,
+    quality: 90,
+    maxWidth: 1600,
+    maxHeight: 900,
     format: 'jpeg'
   }
 };
@@ -45,11 +45,13 @@ async function optimizeImage(inputPath, outputPath, settings) {
     // 임시 파일 사용 (같은 파일을 입력/출력으로 사용하는 문제 해결)
     const tempPath = outputPath + '.tmp';
     
-    // 이미지 크기 조정
-    let pipeline = image.resize(settings.maxWidth, settings.maxHeight, {
-      fit: 'inside',
-      withoutEnlargement: true
-    });
+    // EXIF 방향 정보 자동 적용 후 크기 조정
+    let pipeline = image
+      .rotate() // EXIF 방향 정보 자동 적용
+      .resize(settings.maxWidth, settings.maxHeight, {
+        fit: 'inside',
+        withoutEnlargement: true
+      });
     
     // JPEG 최적화
     if (settings.format === 'jpeg') {
