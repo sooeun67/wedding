@@ -13,7 +13,7 @@ interface GalleryConfig {
 export const weddingConfig = {
   // 메타 정보
   meta: {
-    title: "엄규철 ❤️ 김유진의 결혼식에 초대합니다",
+    title: "남석윤 ❤️ 오수은의 결혼식에 초대합니다",
     description: "결혼식 초대장",
     ogImage: "/images/thumbnail.jpg",
     noIndex: true,
@@ -24,36 +24,38 @@ export const weddingConfig = {
   main: {
     title: "Wedding Invitation",
     image: "/images/main.jpg",
-    date: "2026년 1월 24일 토요일 12시 10분",
-    venue: "빌라드지디 안산 그레이스켈리홀",
+    date: "2025년 11월 22일 토요일 오후 5시 30분",
+    venue: "엘리에나 호텔",
   },
 
   // 소개글
   intro: {
     title: "",
-    text: "학교에서 선후배로 만나\n사랑으로 이어진 지 아홉 해.\n\n그 소중한 시간이 쌓여\n이제는 부부로서 첫 발걸음을 내딛습니다.\n\저희의 첫걸음을 지켜봐 주신다면\n더없는 행복으로 간직하겠습니다."
+    text: "서로 다른 길을 걸어온 저희가\n사랑이라는 이름으로 만나\n\n이제 하나의 길을 함께 걸어가고자 합니다.\n\n저희의 소중한 첫걸음을\n지켜봐 주시고 축복해 주세요."
   },
 
   // 결혼식 일정
   date: {
-    year: 2026,
-    month: 1,
-    day: 24,
-    hour: 12,
-    minute: 10,
-    displayDate: "2026.01.24 SAT PM 12:10",
+    year: 2025,
+    month: 11,
+    day: 22,
+    hour: 17,
+    minute: 30,
+    displayDate: "2025.11.22 SAT PM 5:30",
   },
 
   // 장소 정보
   venue: {
-    name: "빌라드지디 안산",
-    address: "경기 안산시 단원구 광덕4로 140\n빌라드지디 안산 7층 그레이스켈리홀",
-    tel: "031-487-8100",
-    naverMapId: "그레이스켈리홀", // 네이버 지도 검색용 장소명
+    name: "엘리에나 호텔",
+    
+    address: "서울 강남구 논현로 645 엘리에나 호텔\n2층 컨퍼런스 홀",
+    tel: "02-3443-5670",
+    naverMapId: "엘리에나호텔", // 네이버 지도 검색용 장소명
     coordinates: {
-      latitude: 37.314924,
-      longitude: 126.8278801,
+      latitude: 37.511255, 
+      longitude: 127.031676,
     },
+
     placeId: "34291584", // 네이버 지도 장소 ID
     mapZoom: "15", // 지도 줌 레벨 (한 칸 축소)
     mapNaverCoordinates: "14141300,4507203,15,0,0,0,dh", // 네이버 지도 길찾기 URL용 좌표 파라미터 (구 형식)
@@ -87,65 +89,66 @@ export const weddingConfig = {
     layout: "grid" as GalleryLayout, // "scroll" 또는 "grid" 선택
     position: "middle" as GalleryPosition, // "middle" (현재 위치) 또는 "bottom" (맨 하단) 선택
     images: [
-      "/images/gallery/01.JPG",
-      "/images/gallery/02.JPG",
-      "/images/gallery/03.JPG",
-      "/images/gallery/04.JPG",
-      "/images/gallery/06.JPG",
-      "/images/gallery/07.JPG",
-      "/images/gallery/08.JPG",
-      "/images/gallery/09.JPG",
+      "/images/gallery/01.jpg",
+      "/images/gallery/02.jpg",
+      "/images/gallery/03.jpg",
+      "/images/gallery/04.jpg",
+      "/images/gallery/05.jpg",
+      "/images/gallery/06.jpg",
+      "/images/gallery/07.jpg",
+      "/images/gallery/08.jpg",
+      "/images/gallery/09.jpg",
     ],
   } as GalleryConfig,
 
   // 초대의 말씀
   invitation: {
-    message:  "학교에서 선후배로 만나\n사랑으로 이어진 지 아홉 해.\n\n그 소중한 시간이 쌓여\n이제는 부부로서 첫 발걸음을 내딛습니다.\n\저희의 첫걸음을 지켜봐 주신다면\n더없는 행복으로 간직하겠습니다.",
+    message:  "서로 다른 길을 걸어온 저희가\n사랑이라는 이름으로 만나\n\n이제 하나의 길을 함께 걸어가고자 합니다.\n\n저희의 소중한 첫걸음을\n지켜봐 주시고 축복해 주세요.",
     groom: {
-      name: "엄규철",
+      name: "남석윤",
       label: "아들",
-      father: "엄태관",
-      mother: "손덕수",
+      father: "남광",
+      mother: "한지연",
     },
     bride: {
-      name: "김유진",
+      name: "오수은",
       label: "딸",
-      father: "김 범",
-      mother: "이향옥",
+      father: "오성철",
+      mother: "김성자",
     },
   },
 
   // 계좌번호
   account: {
     groom: {
-      bank: "우리은행",
-      number: "1002-247-991527",
-      holder: "엄규철",
+      bank: "은행명",
+      number: "계좌번호",
+      holder: "남석윤",
     },
     bride: {
-      bank: "우리은행",
-      number: "1002-652-980989",
-      holder: "김유진",
+      bank: "신한은행",
+      number: "635-12-141619",
+      holder: "오수은",
     },
     groomFather: {
       bank: "은행명",
-      number: "111-222-333444",
-      holder: "신랑아버지",
+      number: "계좌번호",
+      holder: "남광",
     },
     groomMother: {
       bank: "은행명",
-      number: "555-666-777888",
-      holder: "신랑어머니",
+      number: "계좌번호",
+      holder: "한지연",
     },
     brideFather: {
       bank: "은행명",
-      number: "999-000-111222",
-      holder: "신부아버지",
+      number: "계좌번호",
+      holder: "오성철",
     },
     brideMother: {
       bank: "은행명",
-      number: "333-444-555666",
-      holder: "신부어머니",
+      number: "계좌번호",
+      holder: "김성자",
     }
   },
 
