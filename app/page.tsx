@@ -86,8 +86,8 @@ export default function Home() {
       {showRsvp && <RsvpSection bgColor={sectionColorMap['rsvp']} />}
       <AccountSection bgColor={sectionColorMap['account']} />
       {galleryPosition === 'bottom' && <GallerySection bgColor={sectionColorMap['gallery-bottom']} />}
-        <GuestbookSection bgColor={sectionColorMap['guestbook']} />
-        <Footer />
+      <GuestbookSection bgColor={sectionColorMap['guestbook']} />
+      <Footer />
     </main>
   );
 }

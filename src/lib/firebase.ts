@@ -2,18 +2,28 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 
-// Firebase 설정 - 여기에 본인의 Firebase 프로젝트 설정을 입력하세요
+// Firebase 설정 - 환경 변수에서 불러오기
 const firebaseConfig = {
-  apiKey: "AIzaSyBcGqWsrXM_LSCRFhCWt4Z_xZ4cLKf0s2A",
-  authDomain: "mobile-wedding-guestbook.firebaseapp.com",
-  projectId: "mobile-wedding-guestbook",
-  storageBucket: "mobile-wedding-guestbook.firebasestorage.app",
-  messagingSenderId: "485704291357",
-  appId: "1:485704291357:web:1c6c33e805e173033022f4"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
-// Firebase 앱 초기화
-const app = initializeApp(firebaseConfig);
+// Firebase 앱 초기화 (설정 값 검증)
+let app;
+try {
+  // 필수 설정값 확인
+  if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+    throw new Error('Firebase 설정이 완료되지 않았습니다. .env.local 파일을 확인하세요.');
+  }
+  app = initializeApp(firebaseConfig);
+} catch (error) {
+  console.error('Firebase 초기화 실패:', error);
+  throw error;
+}
 
 // Firestore 데이터베이스 초기화
 export const db = getFirestore(app);

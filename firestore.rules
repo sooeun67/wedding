@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 방명록 컬렉션 규칙
+    match /guestbook/{document} {
+      // 모든 사람이 읽기 가능
+      allow read: if true;
+      
+      // 방명록 작성 규칙 (필수 필드 검증)
+      allow create: if request.resource.data.keys().hasAll(['name', 'message', 'timestamp', 'createdAt']) &&
+        request.resource.data.name is string &&
+        request.resource.data.message is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() <= 50 &&
+        request.resource.data.message.size() > 0 &&
+        request.resource.data.message.size() <= 200;
+      
+      // 수정/삭제 금지
+      allow update, delete: if false;
+    }
+  }
+}
