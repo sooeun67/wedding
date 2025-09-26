@@ -11,11 +11,11 @@ const OPTIMIZATION_SETTINGS = {
     maxHeight: 3600,
     format: 'jpeg'
   },
-  // 갤러리 이미지 (고품질 모바일 최적화)
+  // 갤러리 이미지 (초고품질 모바일 최적화)
   gallery: {
-    quality: 95,
-    maxWidth: 2400,
-    maxHeight: 2400,
+    quality: 98,        // 98% 품질 (거의 원본 수준)
+    maxWidth: 3000,     // 최대 3000px (더 큰 해상도)
+    maxHeight: 3000,    // 최대 3000px
     format: 'jpeg'
   },
   // 썸네일 이미지 (소셜미디어 고화질)
@@ -108,7 +108,7 @@ async function main() {
   };
   
   // 메인 이미지들 처리
-  const mainImages = ['main.jpg', 'main_2.jpg', 'ha0h-1fsi-bqt3.JPG', 'ha0h-1fsi-bqt3_2.jpg'];
+  const mainImages = ['main.jpg', 'ha0h-1fsi-bqt3.JPG', 'ha0h-1fsi-bqt3_2.jpg'];
   for (const imageName of mainImages) {
     const inputPath = path.join(imagesDir, imageName);
     if (fs.existsSync(inputPath)) {
