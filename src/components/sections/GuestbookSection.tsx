@@ -6,16 +6,12 @@ import {
   addGuestbookEntry, 
   subscribeToGuestbook, 
   migrateLocalStorageToFirebase,
-  checkFirebaseConnection 
+  checkFirebaseConnection,
+  deleteGuestbookEntry,
+  isOwnEntry,
+  GuestbookEntry 
 } from '../../services/guestbook';
 
-interface GuestbookEntry {
-  id?: string;
-  name: string;
-  message: string;
-  timestamp: number;
-  createdAt?: any;
-}
 
 interface GuestbookSectionProps {
   bgColor?: 'white' | 'beige';
@@ -144,6 +140,33 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
     }
   };
 
+  // 방명록 삭제
+  const handleDelete = async (entryId: string) => {
+    if (!confirm('정말로 이 방명록을 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      if (isFirebaseConnected) {
+        const success = await deleteGuestbookEntry(entryId);
+        if (success) {
+          alert('방명록이 삭제되었습니다.');
+        } else {
+          throw new Error('Firebase 삭제 실패');
+        }
+      } else {
+        // 로컬스토리지에서 삭제
+        const updatedEntries = entries.filter(entry => entry.id !== entryId);
+        setEntries(updatedEntries);
+        saveToLocalStorage(updatedEntries);
+        alert('방명록이 삭제되었습니다. (로컬 삭제됨)');
+      }
+    } catch (error) {
+      console.error('방명록 삭제 실패:', error);
+      alert('방명록 삭제에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   // 날짜 포맷팅
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -220,6 +243,11 @@ const GuestbookSection = ({ bgColor = 'white' }: GuestbookSectionProps) => {
                   <EntryDate>{formatDate(entry.timestamp)}</EntryDate>
                 </EntryHeader>
                 <EntryMessage>{entry.message}</EntryMessage>
+                {isOwnEntry(entry) && (
+                  <DeleteButton onClick={() => handleDelete(entry.id!)}>
+                    삭제
+                  </DeleteButton>
+                )}
               </EntryCard>
             ))}
           </EntriesList>
@@ -434,6 +462,26 @@ const EntryMessage = styled.div`
   line-height: 1.6;
   font-size: 0.95rem;
   white-space: pre-wrap;
+  margin-bottom: 1rem;
+`;
+
+const DeleteButton = styled.button`
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background: #ff3742;
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
 `;
 
 export default GuestbookSection;

@@ -8,7 +8,9 @@ import {
   limit,
   onSnapshot,
   Timestamp,
-  serverTimestamp 
+  serverTimestamp,
+  deleteDoc,
+  doc
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
@@ -18,18 +20,34 @@ export interface GuestbookEntry {
   message: string;
   timestamp: number;
   createdAt?: any; // Firestore Timestamp
+  sessionId?: string; // 작성자 식별용 세션 ID
 }
 
 const COLLECTION_NAME = 'guestbook';
 
+// 세션 ID 생성 (브라우저별 고유 식별자)
+const generateSessionId = (): string => {
+  if (typeof window !== 'undefined') {
+    let sessionId = sessionStorage.getItem('guestbook-session-id');
+    if (!sessionId) {
+      sessionId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+      sessionStorage.setItem('guestbook-session-id', sessionId);
+    }
+    return sessionId;
+  }
+  return Date.now().toString();
+};
+
 // 방명록 추가
 export const addGuestbookEntry = async (name: string, message: string): Promise<boolean> => {
   try {
+    const sessionId = generateSessionId();
     await addDoc(collection(db, COLLECTION_NAME), {
       name: name.trim(),
       message: message.trim(),
       timestamp: Date.now(),
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
+      sessionId: sessionId
     });
     return true;
   } catch (error) {
@@ -57,7 +75,8 @@ export const getGuestbookEntries = async (): Promise<GuestbookEntry[]> => {
         name: data.name,
         message: data.message,
         timestamp: data.timestamp || Date.now(),
-        createdAt: data.createdAt
+        createdAt: data.createdAt,
+        sessionId: data.sessionId
       });
     });
     
@@ -89,7 +108,8 @@ export const subscribeToGuestbook = (
           name: data.name,
           message: data.message,
           timestamp: data.timestamp || Date.now(),
-          createdAt: data.createdAt
+          createdAt: data.createdAt,
+          sessionId: data.sessionId
         });
       });
       
@@ -103,6 +123,29 @@ export const subscribeToGuestbook = (
     console.error('방명록 리스너 설정 실패:', error);
     return () => {};
   }
+};
+
+// 방명록 삭제 (작성자 본인만 가능)
+export const deleteGuestbookEntry = async (entryId: string): Promise<boolean> => {
+  try {
+    await deleteDoc(doc(db, COLLECTION_NAME, entryId));
+    return true;
+  } catch (error) {
+    console.error('방명록 삭제 실패:', error);
+    return false;
+  }
+};
+
+// 현재 세션 ID 가져오기
+export const getCurrentSessionId = (): string => {
+  return generateSessionId();
+};
+
+// 방명록이 현재 사용자가 작성한 것인지 확인
+export const isOwnEntry = (entry: GuestbookEntry): boolean => {
+  if (typeof window === 'undefined') return false;
+  const currentSessionId = sessionStorage.getItem('guestbook-session-id');
+  return entry.sessionId === currentSessionId;
 };
 
 // 로컬스토리지에서 Firebase로 데이터 마이그레이션 (기존 데이터 보존)

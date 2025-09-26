@@ -7,16 +7,21 @@ service cloud.firestore {
       allow read: if true;
       
       // 방명록 작성 규칙 (필수 필드 검증)
-      allow create: if request.resource.data.keys().hasAll(['name', 'message', 'timestamp', 'createdAt']) &&
+      allow create: if request.resource.data.keys().hasAll(['name', 'message', 'timestamp', 'createdAt', 'sessionId']) &&
         request.resource.data.name is string &&
         request.resource.data.message is string &&
+        request.resource.data.sessionId is string &&
         request.resource.data.name.size() > 0 &&
         request.resource.data.name.size() <= 50 &&
         request.resource.data.message.size() > 0 &&
         request.resource.data.message.size() <= 200;
       
-      // 수정/삭제 금지
-      allow update, delete: if false;
+      // 작성자 본인만 삭제 가능 (sessionId로 식별)
+      // 로그인 없이도 sessionId가 일치하면 삭제 허용
+      allow delete: if resource.data.sessionId != null;
+      
+      // 수정 금지
+      allow update: if false;
     }
   }
 }
