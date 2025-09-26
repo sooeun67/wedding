@@ -107,8 +107,8 @@ async function main() {
     failed: 0
   };
   
-  // 메인 이미지들 처리
-  const mainImages = ['main.jpg', 'ha0h-1fsi-bqt3.JPG', 'ha0h-1fsi-bqt3_2.jpg'];
+  // 메인 이미지들 처리 (갤러리 제외)
+  const mainImages = ['main.jpg', 'thumbnail.JPG'];
   for (const imageName of mainImages) {
     const inputPath = path.join(imagesDir, imageName);
     if (fs.existsSync(inputPath)) {
@@ -134,11 +134,8 @@ async function main() {
       const inputPath = path.join(galleryDir, fileName);
       backupImage(inputPath);
       
-      // 큰 파일들은 갤러리 설정, 작은 파일들은 썸네일 설정 사용
-      const fileSize = fs.statSync(inputPath).size;
-      const settings = fileSize > 1024 * 1024 ? OPTIMIZATION_SETTINGS.gallery : OPTIMIZATION_SETTINGS.thumbnail;
-      
-      const result = await optimizeImage(inputPath, inputPath, settings);
+      // 갤러리 이미지는 모두 98% 품질로 동일하게 최적화
+      const result = await optimizeImage(inputPath, inputPath, OPTIMIZATION_SETTINGS.gallery);
       if (result) {
         totalStats.originalSize += result.originalSize;
         totalStats.optimizedSize += result.optimizedSize;
@@ -149,22 +146,8 @@ async function main() {
     }
   }
   
-  // 기타 이미지들 처리
-  const otherImages = ['bride-child.jpg', 'groom-child.jpg'];
-  for (const imageName of otherImages) {
-    const inputPath = path.join(imagesDir, imageName);
-    if (fs.existsSync(inputPath)) {
-      backupImage(inputPath);
-      const result = await optimizeImage(inputPath, inputPath, OPTIMIZATION_SETTINGS.thumbnail);
-      if (result) {
-        totalStats.originalSize += result.originalSize;
-        totalStats.optimizedSize += result.optimizedSize;
-        totalStats.processed++;
-      } else {
-        totalStats.failed++;
-      }
-    }
-  }
+  // 어린 시절 사진들은 저화질이므로 최적화하지 않음
+  // groom-child.jpg, bride-child.jpg는 원본 그대로 사용
   
   // 결과 요약
   console.log('\n📊 최적화 완료!');
