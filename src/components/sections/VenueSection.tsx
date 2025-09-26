@@ -160,12 +160,11 @@ const VenueSection = ({ bgColor = 'white' }: VenueSectionProps) => {
   // 길찾기 링크 생성 함수들
   const navigateToNaver = () => {
     if (typeof window !== 'undefined') {
-      // 네이버 지도 - 엘리에나 호텔을 도착지로 설정 (출발지 비움)
-      const lat = weddingConfig.venue.coordinates.latitude;
-      const lng = weddingConfig.venue.coordinates.longitude;
+      // 네이버 지도 - 엘리에나 호텔 placeId 사용하여 정확한 장소 연결
+      const placeId = weddingConfig.venue.placeId;
       const name = encodeURIComponent(weddingConfig.venue.name);
-      // 네이버 지도 길찾기 URL (출발지 비우고 도착지만 설정)
-      const naverMapsUrl = `https://map.naver.com/p/directions/-/-/${name},${lat},${lng}/walk`;
+      // 네이버 지도 길찾기 URL (placeId 사용, 출발지 비우고 도착지만 설정)
+      const naverMapsUrl = `https://map.naver.com/p/directions/-/-/place/${placeId}?c=15.00,0,0,0,dh`;
       window.open(naverMapsUrl, '_blank');
     }
   };

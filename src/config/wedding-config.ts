@@ -56,7 +56,7 @@ export const weddingConfig = {
       longitude: 127.031676,
     },
 
-    placeId: "엘리에나호텔", // 네이버 지도 장소명 (placeId 대신 장소명 사용)
+    placeId: "1354448162", // 네이버 지도 엘리에나 호텔 placeId
     mapZoom: "15", // 지도 줌 레벨
     mapNaverCoordinates: "14141300,4507203,15,0,0,0,dh", // 네이버 지도 길찾기 URL용 좌표 파라미터
     transportation: {
