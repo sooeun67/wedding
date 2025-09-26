@@ -160,19 +160,22 @@ const VenueSection = ({ bgColor = 'white' }: VenueSectionProps) => {
   // 길찾기 링크 생성 함수들
   const navigateToNaver = () => {
     if (typeof window !== 'undefined') {
-      // 네이버 지도 앱/웹으로 연결하는 URL (새로운 형식)
-      const naverMapsUrl = `https://map.naver.com/p/directions/-/-/-/walk/place/${weddingConfig.venue.placeId}?c=${weddingConfig.venue.mapZoom},0,0,0,dh`;
+      // 네이버 지도 - 엘리에나 호텔을 도착지로 설정 (출발지 비움)
+      const lat = weddingConfig.venue.coordinates.latitude;
+      const lng = weddingConfig.venue.coordinates.longitude;
+      const name = encodeURIComponent(weddingConfig.venue.name);
+      // 네이버 지도 길찾기 URL (출발지 비우고 도착지만 설정)
+      const naverMapsUrl = `https://map.naver.com/p/directions/-/-/${name},${lat},${lng}/walk`;
       window.open(naverMapsUrl, '_blank');
     }
   };
   
   const navigateToKakao = () => {
     if (typeof window !== 'undefined') {
-      // 카카오맵 앱/웹으로 연결
+      // 카카오맵 - 엘리에나 호텔을 도착지로 설정 (출발지 비움)
       const lat = weddingConfig.venue.coordinates.latitude;
       const lng = weddingConfig.venue.coordinates.longitude;
       const name = encodeURIComponent(weddingConfig.venue.name);
-      const address = encodeURIComponent(weddingConfig.venue.address);
       const kakaoMapsUrl = `https://map.kakao.com/link/to/${name},${lat},${lng}`;
       window.open(kakaoMapsUrl, '_blank');
     }
@@ -180,20 +183,27 @@ const VenueSection = ({ bgColor = 'white' }: VenueSectionProps) => {
   
   const navigateToTmap = () => {
     if (typeof window !== 'undefined') {
-      // TMAP 앱으로 연결 (앱 딥링크만 사용)
+      // TMAP - 엘리에나 호텔을 도착지로 설정 (출발지 비움)
       const lat = weddingConfig.venue.coordinates.latitude;
       const lng = weddingConfig.venue.coordinates.longitude;
       const name = encodeURIComponent(weddingConfig.venue.name);
       
-      // 모바일 디바이스에서는 앱 실행 시도
-      window.location.href = `tmap://route?goalname=${name}&goaly=${lat}&goalx=${lng}`;
+      // 모바일에서는 앱 실행, 데스크톱에서는 웹으로 이동
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
-      // 앱이 설치되어 있지 않을 경우를 대비해 약간의 지연 후 TMAP 웹사이트로 이동
-      setTimeout(() => {
-        // TMAP이 설치되어 있지 않으면 TMAP 웹사이트 메인으로 이동
-        if(document.hidden) return; // 앱이 실행되었으면 아무것도 하지 않음
-        window.location.href = 'https://tmap.co.kr';
-      }, 1000);
+      if (isMobile) {
+        // 모바일: TMAP 앱 실행 시도
+        window.location.href = `tmap://route?goalname=${name}&goaly=${lat}&goalx=${lng}`;
+        
+        // 앱이 설치되어 있지 않을 경우를 대비해 약간의 지연 후 TMAP 웹사이트로 이동
+        setTimeout(() => {
+          if(document.hidden) return; // 앱이 실행되었으면 아무것도 하지 않음
+          window.open('https://tmap.co.kr', '_blank');
+        }, 1000);
+      } else {
+        // 데스크톱: TMAP 웹사이트로 이동
+        window.open('https://tmap.co.kr', '_blank');
+      }
     }
   };
   
