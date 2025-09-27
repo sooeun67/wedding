@@ -4,9 +4,9 @@ const nextConfig = {
     styledComponents: true,
   },
   
-  // 이미지 최적화 설정 (고품질 유지)
+  // 이미지 최적화 설정 (압축된 이미지에 최적화)
   images: {
-    formats: ['image/jpeg'], // JPEG만 사용하여 압축 최소화
+    formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512, 768, 1024],
     minimumCacheTTL: 0, // 캐시 비활성화 (즉시 업데이트)
