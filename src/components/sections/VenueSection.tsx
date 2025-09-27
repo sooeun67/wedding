@@ -163,8 +163,8 @@ const VenueSection = ({ bgColor = 'white' }: VenueSectionProps) => {
       // 네이버 지도 - 엘리에나 호텔 placeId 사용하여 정확한 장소 연결
       const placeId = weddingConfig.venue.placeId;
       const name = encodeURIComponent(weddingConfig.venue.name);
-      // 네이버 지도 길찾기 URL (placeId 사용, 출발지 비우고 도착지만 설정)
-      const naverMapsUrl = `https://map.naver.com/p/directions/-/-/place/${placeId}?c=15.00,0,0,0,dh`;
+      // 네이버 지도 길찾기 URL (placeId 사용, 출발지 비우고 도착지만 설정, 기본 모드)
+      const naverMapsUrl = `https://map.naver.com/p/directions/-/-/-/place/${placeId}?c=15,0,0,0,dh`;
       window.open(naverMapsUrl, '_blank');
     }
   };
