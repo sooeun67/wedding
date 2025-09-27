@@ -23,7 +23,7 @@ export const weddingConfig = {
   // 메인 화면
   main: {
     title: "Wedding Invitation",
-    image: "/images/main.jpg?v=3",
+    image: "/images/main.jpg?v=4",
     date: "2025년 11월 22일 토요일 오후 5시 30분",
     venue: "엘리에나 호텔",
   },
@@ -140,14 +140,19 @@ export const weddingConfig = {
       holder: "오수은",
     },
     groomFather: {
-      bank: "은행명",
-      number: "계좌번호",
+      bank: "신한은행",
+      number: "110-090-271750",
       holder: "남광",
     },
     brideFather: {
       bank: "하나은행",
       number: "335-18-044503",
       holder: "오성철",
+    },
+    groomMother: {
+      bank: "신한은행",
+      number: "619-02-278825",
+      holder: "한지연",
     }
   },
 
