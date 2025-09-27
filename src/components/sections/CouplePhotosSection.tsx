@@ -15,7 +15,7 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
         <PhotoWrapper>
           <CircularImageContainer>
             <CircularImage 
-              src="/images/groom-child.jpg"
+              src="/images/groom-child.jpg?v=2"
               alt="신랑 어릴 때 사진"
               fill
               sizes="180px"
@@ -41,7 +41,7 @@ const CouplePhotosSection = ({ bgColor = 'white' }: CouplePhotosSectionProps) =>
         <PhotoWrapper>
           <CircularImageContainer>
             <CircularImage 
-              src="/images/bride-child.jpg"
+              src="/images/bride-child.jpg?v=2"
               alt="신부 어릴 때 사진"
               fill
               sizes="180px"
