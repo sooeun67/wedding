@@ -144,20 +144,10 @@ export const weddingConfig = {
       number: "계좌번호",
       holder: "남광",
     },
-    groomMother: {
-      bank: "은행명",
-      number: "계좌번호",
-      holder: "한지연",
-    },
     brideFather: {
-      bank: "은행명",
-      number: "계좌번호",
+      bank: "하나은행",
+      number: "335-18-044503",
       holder: "오성철",
-    },
-    brideMother: {
-      bank: "은행명",
-      number: "계좌번호",
-      holder: "김성자",
     }
   },
 

@@ -172,7 +172,6 @@ const AccountSection = ({ bgColor = 'white' }: AccountSectionProps) => {
             <AccountRowsContainer>
               {renderAccountRow(weddingConfig.account.groom, 'groom', '신랑')}
               {renderAccountRow(weddingConfig.account.groomFather, 'groomFather', '아버지')}
-              {renderAccountRow(weddingConfig.account.groomMother, 'groomMother', '어머니')}
             </AccountRowsContainer>
           )}
         </AccountCard>
@@ -190,7 +189,6 @@ const AccountSection = ({ bgColor = 'white' }: AccountSectionProps) => {
             <AccountRowsContainer>
               {renderAccountRow(weddingConfig.account.bride, 'bride', '신부')}
               {renderAccountRow(weddingConfig.account.brideFather, 'brideFather', '아버지')}
-              {renderAccountRow(weddingConfig.account.brideMother, 'brideMother', '어머니')}
             </AccountRowsContainer>
           )}
         </AccountCard>
