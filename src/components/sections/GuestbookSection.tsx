@@ -320,6 +320,7 @@ const NameInput = styled.input`
   border: 2px solid #e1e5e9;
   border-radius: 8px;
   font-size: 1rem;
+  font-family: inherit;
   transition: border-color 0.3s ease;
   
   &:focus {

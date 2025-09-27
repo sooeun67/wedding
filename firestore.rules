@@ -20,7 +20,7 @@ service cloud.firestore {
       // 1. 작성자 본인 (sessionId로 식별) - 로그인 없이 가능
       // 2. 관리자 (특정 이메일로 식별) - 로그인 필요
       allow delete: if resource.data.sessionId != null || 
-        (request.auth != null && request.auth.token.email in ['sooeun67@gmail.com', 'admin@wedding.com']);
+        (request.auth != null && request.auth.token.email in ['isooeuni@gmail.com', 'admin@wedding.com']);
       
       // 수정 금지
       allow update: if false;
