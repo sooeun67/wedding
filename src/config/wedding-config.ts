@@ -48,7 +48,7 @@ export const weddingConfig = {
   venue: {
     name: "엘리에나 호텔",
     
-    address: "서울 강남구 논현로 645 엘리에나 호텔\n2층 컨퍼런스 홀",
+    address: "서울 강남구 논현로 645 엘리에나 호텔\n2층 컨벤션 홀",
     tel: "02-3443-5670",
     naverMapId: "엘리에나호텔", // 네이버 지도 검색용 장소명
     coordinates: {
